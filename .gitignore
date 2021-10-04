@@ -1,2 +1,4 @@
 # Python Files
 *.pyc
+# landmark data
+landmark_data.txt
