@@ -2,3 +2,7 @@
 *.pyc
 # landmark data
 landmark_data.txt
+# pycharm files
+.idea/2021-TEAM-03.iml
+*.xml
+.idea/.gitignore
