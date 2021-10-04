@@ -6,7 +6,6 @@ pose = mpPose.Pose()
 mpDraw = mp.solutions.drawing_utils
 
 cap = cv2.VideoCapture('video_sample\\exercise.mp4')
-pTime = 0
 
 # overwrite previous landmark data
 open('landmark_data.txt', 'w')
@@ -16,6 +15,7 @@ while True:
     # cv2 frames are in BGR while mediapipe uses RGB, hence conversion required
     frameRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     results = pose.process(frameRGB)
+    cv2.imwrite('video_sample/exercise.png', frame)
 
     # override previous data stored in landmark_data.txt
 
@@ -27,7 +27,7 @@ while True:
         # plotting without the above API call, mpDraw.draw_landmarks()
         # calculating the actual pixel value using the ratio of x and y in lm
         for id, lm in enumerate(results.pose_landmarks.landmark):
-            # get the dimentions (in pixel) of the video
+            # get the dimensions (in pixel) of the video
             h, w, c = frame.shape
             # calculate pixel value
             xPixelValue, yPixelValue = int (lm.x * w), int(lm.y * h)
