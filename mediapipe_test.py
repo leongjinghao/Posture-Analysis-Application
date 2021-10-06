@@ -17,10 +17,13 @@ while True:
     success, frame = cap.read()
     # cv2 frames are in BGR while mediapipe uses RGB, hence conversion required
     frameRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    # To improve performance, optionally mark the image as not writeable to pass by reference.
+    frameRGB.flags.writeable = False
     results = pose.process(frameRGB)
 
     # plot if landmark is detected
     if results.pose_landmarks:
+        # Draw the pose annotation on the image.
         # plot all landmark detected in results
         mpDraw.draw_landmarks(frame, results.pose_landmarks, mpPose.POSE_CONNECTIONS)
 
@@ -34,7 +37,7 @@ while True:
             # plot the landmarks individually
             cv2.circle(frame, (xPixelValue, yPixelValue), 3, (255, 0, 255), cv2.FILLED)
             # write landmark data into a txt file
-            if True:
+            if False:
                 with open('landmark_data.txt', 'a') as f:
                     f.write("{0}, {1}, {2}, {3}\n".format(id, lm.x, lm.y, lm.z))
 
