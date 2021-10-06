@@ -2,6 +2,6 @@
 
 ## Libraries Installation Guide 
 - OpenCV
-> -pip install opencv
+> -pip install opencv-python
 - Matplotlib
 > -pip install matplotlib
