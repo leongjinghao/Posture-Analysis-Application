@@ -1,11 +1,14 @@
 import cv2
 import mediapipe as mp
 
+import time
+
 mpPose = mp.solutions.pose
-pose = mpPose.Pose()
+pose = mpPose.Pose(min_detection_confidence=0.5)
 mpDraw = mp.solutions.drawing_utils
 
 cap = cv2.VideoCapture('video_sample\\exercise.mp4')
+pTime = 0
 
 # overwrite previous landmark data
 open('landmark_data.txt', 'w')
@@ -15,9 +18,6 @@ while True:
     # cv2 frames are in BGR while mediapipe uses RGB, hence conversion required
     frameRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     results = pose.process(frameRGB)
-    cv2.imwrite('video_sample/exercise.png', frame)
-
-    # override previous data stored in landmark_data.txt
 
     # plot if landmark is detected
     if results.pose_landmarks:
@@ -30,12 +30,19 @@ while True:
             # get the dimensions (in pixel) of the video
             h, w, c = frame.shape
             # calculate pixel value
-            xPixelValue, yPixelValue = int (lm.x * w), int(lm.y * h)
+            xPixelValue, yPixelValue = int(lm.x * w), int(lm.y * h)
             # plot the landmarks individually
             cv2.circle(frame, (xPixelValue, yPixelValue), 3, (255, 0, 255), cv2.FILLED)
             # write landmark data into a txt file
-            with open('landmark_data.txt', 'a') as f:
-                f.write("{0}, {1}, {2}, {3}\n".format(id, lm.x, lm.y, lm.z))
+            if True:
+                with open('landmark_data.txt', 'a') as f:
+                    f.write("{0}, {1}, {2}, {3}\n".format(id, lm.x, lm.y, lm.z))
+
+    # show FPS
+    cTime = time.time()
+    fps = 1/(cTime - pTime)
+    pTime = cTime
+    cv2.putText(frame, str(int(fps)), (70, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
 
     # video output with landmark plotted
     cv2.imshow("Video", frame)
