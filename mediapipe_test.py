@@ -11,7 +11,7 @@ cap = cv2.VideoCapture('video_sample/exercise.mp4')
 pTime = 0
 
 # overwrite previous landmark data
-open('landmark_data.txt', 'w')
+# open('landmark_data.txt', 'w')
 
 while True:
     success, frame = cap.read()
