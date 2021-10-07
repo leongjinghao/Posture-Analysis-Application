@@ -7,7 +7,7 @@ mpPose = mp.solutions.pose
 pose = mpPose.Pose(min_detection_confidence=0.5)
 mpDraw = mp.solutions.drawing_utils
 
-cap = cv2.VideoCapture('video_sample\\exercise.mp4')
+cap = cv2.VideoCapture('video_sample/exercise.mp4')
 pTime = 0
 
 # overwrite previous landmark data
