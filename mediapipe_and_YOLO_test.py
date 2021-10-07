@@ -26,6 +26,7 @@ mpDraw = mp.solutions.drawing_utils
 mpDrawingStyle = mp.solutions.drawing_styles
 
 def multiPersonPostureRecognition(outputs, img):
+    # STEP 1: Detect each person on frame (img) #
     hT, wT, cT = img.shape
     bbox = []
     classIds = []
@@ -50,6 +51,7 @@ def multiPersonPostureRecognition(outputs, img):
 
     indicies = cv2.dnn.NMSBoxes(bbox, confs, confThreshold, nmsThreshold)
 
+    # STEP 2: Posture Recognition for each person detected #
     # for each person detected
     for i in indicies:
         i = i[0]
@@ -61,7 +63,7 @@ def multiPersonPostureRecognition(outputs, img):
         cv2.putText(img, f'{classNames[classIds[i]].upper()} {int(confs[i] * 100)}%',
                     (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
 
-        # for each person
+        # crop the frame (crop_img) for each person detected using the bounding box para
         crop_img = img[y: y + h, x: x + w]
         #cv2.imshow('test', crop_img)
         #breakpoint()
@@ -95,17 +97,21 @@ while True:
 
     # check if there are still frames left on video stream
     try:
+        # inputs from frame are stored in a blob, which will be used for the model input
         blob = cv2.dnn.blobFromImage(img, 1 / 255, (whT, whT), [0, 0, 0], 1, crop=False)
     except:
         print('End of video stream...')
         break
+    # set the blob as input for model
     net.setInput(blob)
 
+    # YOLO's 3 output layers, yolo_82, yolo_94, and yolo_106
     layerNames = net.getLayerNames()
     outputNames = [layerNames[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
     outputs = net.forward(outputNames)
 
+    # Detect person on frame, then perform posture recognition based on cropped image of person
     multiPersonPostureRecognition(outputs, img)
 
     # show FPS
