@@ -3,7 +3,7 @@ import numpy as np
 import mediapipe as mp
 import time
 
-cap = cv2.VideoCapture('video_sample/cycling.mp4')
+cap = cv2.VideoCapture('video_sample/exercise.mp4')
 whT = 320
 confThreshold = 0.5
 nmsThreshold = 0.3
@@ -36,10 +36,11 @@ def findObjects(outputs, img):
             scores = det[5:]
             # get highest scored classname identified
             classId = np.argmax(scores)
-            # if person is detected
+            # if object detected is not not a person, skip this object
             if not classId == 0:
                 break
             confidence = scores[classId]
+            # if confidence level for person detected is higher than threshold
             if confidence > confThreshold:
                 w, h = int(det[2] * wT), int(det[3] * hT)
                 x, y = int((det[0] * wT) - w/2), int((det[1] * hT) - h/2)
@@ -49,6 +50,7 @@ def findObjects(outputs, img):
 
     indicies = cv2.dnn.NMSBoxes(bbox, confs, confThreshold, nmsThreshold)
 
+    #for each person detected
     for i in indicies:
         i = i[0]
         box = bbox[i]
@@ -63,26 +65,25 @@ def findObjects(outputs, img):
         crop_img = img[y: y+h, x: x+w]
         crop_img_h, crop_img_w, _ = crop_img.shape
 
-        results = pose.process(cv2.cvtColor(crop_img, cv2.COLOR_BGR2RGB))
+        try:
+            frameRGB = cv2.cvtColor(crop_img, cv2.COLOR_BGR2RGB)
+            # To improve performance, optionally mark the frame as not writeable to pass by reference.
+            frameRGB.flags.writeable = False
+            results = pose.process(frameRGB)
 
-        '''
-        if not results.pose_landmarks:
+            '''
+            if not results.pose_landmarks:
+                continue
+            print(
+                f'Nose coordinates: ('
+                f'{results.pose_landmarks.landmark[mpPose.PoseLandmark.NOSE].x * crop_img_w}, '
+                f'{results.pose_landmarks.landmark[mpPose.PoseLandmark.NOSE].y * crop_img_h})'
+            )'''
+
+            # draw landmarks on the cropped image
+            mpDraw.draw_landmarks(crop_img, results.pose_landmarks, mpPose.POSE_CONNECTIONS)
+        except:
             continue
-        print(
-            f'Nose coordinates: ('
-            f'{results.pose_landmarks.landmark[mpPose.PoseLandmark.NOSE].x * crop_img_w}, '
-            f'{results.pose_landmarks.landmark[mpPose.PoseLandmark.NOSE].y * crop_img_h})'
-        )'''
-
-        # draw landmarks on the image
-        mpDraw.draw_landmarks(
-            crop_img,
-            results.pose_landmarks,
-            mpPose.POSE_CONNECTIONS,
-            landmark_drawing_spec=mpDrawingStyle.get_default_pose_landmarks_style())
-        #cv2.imwrite('/tmp/annotated_image' + str(idx) + '.png', annotated_image)
-
-
 
 while True:
     success, img = cap.read()
@@ -92,7 +93,6 @@ while True:
 
     layerNames = net.getLayerNames()
     outputNames = [layerNames[i[0] - 1] for i in net.getUnconnectedOutLayers()]
-    #print(outputNames)
 
     outputs = net.forward(outputNames)
 
