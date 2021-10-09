@@ -3,7 +3,7 @@ import numpy as np
 import mediapipe as mp
 import time
 
-cap = cv2.VideoCapture('video_sample/exercise.mp4')
+cap = cv2.VideoCapture('video_sample/exercise2.mp4')
 whT = 320
 confThreshold = 0.5
 nmsThreshold = 0.3
@@ -23,7 +23,6 @@ net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
 mpPose = mp.solutions.pose
 pose = mpPose.Pose(min_detection_confidence=0.5)
 mpDraw = mp.solutions.drawing_utils
-mpDrawingStyle = mp.solutions.drawing_styles
 
 def multiPersonPostureRecognition(outputs, img):
     # STEP 1: Detect each person on frame (img) #
@@ -59,6 +58,8 @@ def multiPersonPostureRecognition(outputs, img):
         x, y, w, h = box[0], box[1], box[2], box[3]
         # bounding box
         cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 255), 2)
+        # center point
+        # cv2.circle(img,(int(x + w/2), int(y + h/2)), 10, (0, 255, 255))
         # label for object and confidence
         cv2.putText(img, f'{classNames[classIds[i]].upper()} {int(confs[i] * 100)}%',
                     (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
@@ -77,6 +78,9 @@ def multiPersonPostureRecognition(outputs, img):
 
         # To improve performance, optionally mark the frame as not writeable to pass by reference.
         frameRGB.flags.writeable = False
+
+        #
+
         results = pose.process(frameRGB)
 
         '''
@@ -120,5 +124,6 @@ while True:
     pTime = cTime
     cv2.putText(img, str(int(fps)), (70, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
 
+    img = cv2.resize(img,(1270,720))
     cv2.imshow('Video Stream', img)
     cv2.waitKey(1)
