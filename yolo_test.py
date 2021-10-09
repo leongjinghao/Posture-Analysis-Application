@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import time
 
-cap = cv2.VideoCapture('video_sample/cycling.mp4')
+cap = cv2.VideoCapture('video_sample/exercise.mp4')
 whT = 320
 confThreshold = 0.5
 nmsThreshold = 0.3
@@ -73,5 +73,6 @@ while True:
     pTime = cTime
     cv2.putText(img, str(int(fps)), (70, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
 
+    img = cv2.resize(img, (960, 540))
     cv2.imshow('Image', img)
     cv2.waitKey(1)
