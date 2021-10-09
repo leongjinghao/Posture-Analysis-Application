@@ -8,5 +8,9 @@ Download links for YOLO model's .cfg and .weights file are as follows. Please do
 > https://github.com/pjreddie/darknet/blob/master/cfg/yolov3-tiny.cfg
 - YOLOv3-tiny weight
 > https://pjreddie.com/media/files/yolov3-tiny.weights
+- YOLOv4-tiny config
+> https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/yolov4-tiny.cfg
+- YOLOv4-tiny weight
+> https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.weights
 - YOLOv4 .cfg & .weights
 > https://github.com/AlexeyAB/darknet/wiki/YOLOv4-model-zoo
