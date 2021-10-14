@@ -3,16 +3,21 @@ import numpy as np
 import mediapipe as mp
 import time
 
+# video stream source
 cap = cv2.VideoCapture('video_sample/dancing2.mp4')
-whT = 320
+# confidence threshold for object detection
 confThreshold = 0.5
+# score threshold for bounding box suppression
 nmsThreshold = 0.3
+# relative start time for fps calculation
 pTime = 0
 
+# coco class name
 classNames = []
 with open('YOLO_config/coco.names', 'rt') as f:
     classNames = f.read().rstrip('\n').split('\n')
 
+# YOLO model configurations
 modelConfiguration = 'YOLO_config/yolov4-tiny.cfg'
 modelWeights = 'YOLO_config/yolov4-tiny.weights'
 
@@ -20,7 +25,7 @@ net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeights)
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
 net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
 
-# (changed)
+# mediapipe posture analysis object instantiation
 personCount = 1
 mpPose = [mp.solutions.pose for i in range(personCount)]
 pose = [mpPose[i].Pose(min_detection_confidence=0.5) for i in range(personCount)]
@@ -115,7 +120,7 @@ while True:
         break
 
     # inputs from frame are stored in a blob, which will be used for the model input
-    blob = cv2.dnn.blobFromImage(img, 1 / 255, (whT, whT), [0, 0, 0], 1, crop=False)
+    blob = cv2.dnn.blobFromImage(img, 1 / 255, (320, 320), [0, 0, 0], 1, crop=False)
 
     # set the blob as input for model
     net.setInput(blob)
