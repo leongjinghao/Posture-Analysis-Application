@@ -5,27 +5,29 @@ cap = cv2.VideoCapture('video_sample/exercise.mp4')
 pTime = 0
 count = 0
 
+# read landmark log file
+with open('landmark_data.txt', 'r') as f:
+    lm_data = f.readlines()
+
+# line index of landmark log file
+lineIndex = 0
+
 while True:
     success, frame = cap.read()
 
-    # plotting without the above API call, mpDraw.draw_landmarks()
-    # calculating the actual pixel value using the ratio of x and y in lm
-    with open('landmark_data.txt', 'r') as f:
-        lm_data = f.readlines()
-
-    for i in range(33):
-        line = lm_data[count + i]
-        coordinates = line.replace('\n', '').split(', ')
-        # get the dimensions (in pixel) of the video
-        h, w, c = frame.shape
+    line = lm_data[lineIndex]
+    coordinates = line.replace('\n', '').split(', ')
+    # get the dimensions (in pixel) of the video
+    h, w, c = frame.shape
+    # plot x, y coordinates (in pair) for each landmark (33 in total)
+    for i in range(0, 66, 2):
         # calculate pixel value
-        xPixelValue, yPixelValue = int(float(coordinates[1]) * w), int(float(coordinates[2]) * h)
+        xPixelValue, yPixelValue = int(float(coordinates[i]) * w), int(float(coordinates[i + 1]) * h)
         # plot the landmarks individually
         cv2.circle(frame, (xPixelValue, yPixelValue), 3, (255, 0, 255), cv2.FILLED)
-        # write landmark data into a txt file
 
-    # shift to next set of landmark (each posture (per frame) consist a set of 33 lm)
-    count += 33
+    # increment to next line in landmark log file
+    lineIndex += 1
 
     # show FPS
     cTime = time.time()
