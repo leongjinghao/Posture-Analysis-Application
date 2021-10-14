@@ -3,7 +3,7 @@ import numpy as np
 import mediapipe as mp
 import time
 
-cap = cv2.VideoCapture('video_sample/exercise2.mp4')
+cap = cv2.VideoCapture('video_sample/dancing2.mp4')
 whT = 320
 confThreshold = 0.5
 nmsThreshold = 0.3
@@ -13,15 +13,15 @@ classNames = []
 with open('YOLO_config/coco.names', 'rt') as f:
     classNames = f.read().rstrip('\n').split('\n')
 
-modelConfiguration = 'YOLO_config/yolov3-320.cfg'
-modelWeights = 'YOLO_config/yolov3-320.weights'
+modelConfiguration = 'YOLO_config/yolov4-tiny.cfg'
+modelWeights = 'YOLO_config/yolov4-tiny.weights'
 
 net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeights)
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
 net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
 
 # (changed)
-personCount = 10
+personCount = 1
 mpPose = [mp.solutions.pose for i in range(personCount)]
 pose = [mpPose[i].Pose(min_detection_confidence=0.5) for i in range(personCount)]
 mpDraw = mp.solutions.drawing_utils
@@ -35,6 +35,8 @@ def multiPersonPostureRecognition(outputs, img):
 
     for output in outputs:
         for det in output:
+            # first 5 elements are the x, y values, width, height of bounding box, and detection flag
+            # remaining 80 elements are the confidence level for detection of each coco.name items
             scores = det[5:]
             # get highest scored classname identified
             classId = np.argmax(scores)
@@ -42,7 +44,7 @@ def multiPersonPostureRecognition(outputs, img):
             if not classId == 0:
                 break
             confidence = scores[classId]
-            # if confidence level for person detected is higher than threshold
+            # if confidence level for person detected is higher than threshold, store the bounding box param
             if confidence > confThreshold:
                 w, h = int(det[2] * wT), int(det[3] * hT)
                 x, y = int((det[0] * wT) - w / 2), int((det[1] * hT) - h / 2)
@@ -50,13 +52,13 @@ def multiPersonPostureRecognition(outputs, img):
                 classIds.append(classId)
                 confs.append(float(confidence))
 
-    indicies = cv2.dnn.NMSBoxes(bbox, confs, confThreshold, nmsThreshold)
+    # suppress duplicated bounding boxes
+    indicies = cv2.dnn.NMSBoxes(bbox, confs, confThreshold, nmsThreshold, top_k=personCount)
 
     # STEP 2: Posture Recognition for each person detected #
     # for each person detected
-    # (changed)
     poseObjIdx = 0
-    for i in indicies[:personCount]:
+    for i in indicies:
         i = i[0]
         box = bbox[i]
         x, y, w, h = box[0], box[1], box[2], box[3]
@@ -83,21 +85,23 @@ def multiPersonPostureRecognition(outputs, img):
         # To improve performance, optionally mark the frame as not writeable to pass by reference.
         frameRGB.flags.writeable = False
 
-        # (changed)
         results = pose[poseObjIdx].process(frameRGB)
-
-        '''
-        if not results.pose_landmarks:
-            continue
-        print(
-            f'Nose coordinates: ('
-            f'{results.pose_landmarks.landmark[mpPose.PoseLandmark.NOSE].x * crop_img_w}, '
-            f'{results.pose_landmarks.landmark[mpPose.PoseLandmark.NOSE].y * crop_img_h})'
-        )'''
 
         # draw landmarks on the cropped image
         mpDraw.draw_landmarks(crop_img, results.pose_landmarks, mpPose[poseObjIdx].POSE_CONNECTIONS)
 
+        # plot pose world lm (3D coordinates)
+        #mpDraw.plot_landmarks(
+        #    results.pose_world_landmarks, mpPose[poseObjIdx].POSE_CONNECTIONS)
+
+        # if true, write landmark data into a txt file
+        if False:
+            if id < 32:
+                delimiter = ', '
+            else:
+                delimiter = '\n'
+            with open('landmark_data.txt', 'a') as f:
+                f.write("{0}, {1}{2}".format(lm.x, lm.y, delimiter))
         # increment pose object index for next person's frame
         poseObjIdx += 1
 
@@ -105,20 +109,22 @@ def multiPersonPostureRecognition(outputs, img):
 while True:
     success, img = cap.read()
 
-    # check if there are still frames left on video stream
-    try:
-        # inputs from frame are stored in a blob, which will be used for the model input
-        blob = cv2.dnn.blobFromImage(img, 1 / 255, (whT, whT), [0, 0, 0], 1, crop=False)
-    except:
+    # if video stream ended
+    if not success:
         print('End of video stream...')
         break
+
+    # inputs from frame are stored in a blob, which will be used for the model input
+    blob = cv2.dnn.blobFromImage(img, 1 / 255, (whT, whT), [0, 0, 0], 1, crop=False)
+
     # set the blob as input for model
     net.setInput(blob)
 
-    # YOLO's 3 output layers, yolo_82, yolo_94, and yolo_106
+    # YOLO's 3 output layers
     layerNames = net.getLayerNames()
     outputNames = [layerNames[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
+    # retrieve object detection data
     outputs = net.forward(outputNames)
 
     # Detect person on frame, then perform posture recognition based on cropped image of person
@@ -130,6 +136,7 @@ while True:
     pTime = cTime
     cv2.putText(img, str(int(fps)), (70, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
 
-    img = cv2.resize(img,(1270,720))
+    # display video stream with posture landmarks plotted
+    img = cv2.resize(img, (1270, 720))
     cv2.imshow('Video Stream', img)
     cv2.waitKey(1)
