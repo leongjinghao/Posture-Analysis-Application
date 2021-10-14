@@ -9,12 +9,16 @@ mpDraw = mp.solutions.drawing_utils
 
 cap = cv2.VideoCapture('video_sample/exercise.mp4')
 pTime = 0
+writeLM = True
 
-# overwrite previous landmark data
-# open('landmark_data.txt', 'w')
+if writeLM:
+    # overwrite previous landmark data
+    open('landmark_data.txt', 'w')
 
 while True:
     success, frame = cap.read()
+    if not success:
+        break
     # cv2 frames are in BGR while mediapipe uses RGB, hence conversion required
     frameRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     # To improve performance, optionally mark the image as not writeable to pass by reference.
@@ -36,10 +40,14 @@ while True:
             xPixelValue, yPixelValue = int(lm.x * w), int(lm.y * h)
             # plot the landmarks individually
             cv2.circle(frame, (xPixelValue, yPixelValue), 3, (255, 0, 255), cv2.FILLED)
-            # write landmark data into a txt file
-            if False:
+            # True, write landmark data into a txt file
+            if writeLM:
+                if id < 32:
+                    delimiter = ', '
+                else:
+                    delimiter = '\n'
                 with open('landmark_data.txt', 'a') as f:
-                    f.write("{0}, {1}, {2}, {3}\n".format(id, lm.x, lm.y, lm.z))
+                    f.write("{0}, {1}{2}".format(lm.x, lm.y, delimiter))
 
     # show FPS
     cTime = time.time()
