@@ -3,9 +3,7 @@
 # landmark data
 landmark_data.txt
 # pycharm files
-.idea/2021-TEAM-03.iml
-*.xml
-.idea/.gitignore
-# YOLO model weight file
-YOLO_config/yolov3-320.weights
-YOLO_config/yolov3-tiny.weights
+.idea
+# YOLO model .cfg & .weights files
+*.cfg
+*.weights
