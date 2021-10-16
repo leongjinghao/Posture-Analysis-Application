@@ -55,6 +55,7 @@ while True:
     pTime = cTime
     cv2.putText(frame, "{:.1f} FPS".format(float(fps)), (70, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
 
+    frame = cv2.resize(frame, (1270, 720))
     # video output with landmark plotted
     cv2.imshow("Video", frame)
     # delay

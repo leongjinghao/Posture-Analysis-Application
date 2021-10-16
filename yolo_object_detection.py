@@ -12,8 +12,8 @@ classNames = []
 with open('YOLO_config/coco.names', 'rt') as f:
     classNames = f.read().rstrip('\n').split('\n')
 
-modelConfiguration = 'YOLO_config/yolov3-320.cfg'
-modelWeights = 'YOLO_config/yolov3-320.weights'
+modelConfiguration = 'YOLO_config/yolov4-tiny.cfg'
+modelWeights = 'YOLO_config/yolov4-tiny.weights'
 
 net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeights)
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
@@ -73,6 +73,6 @@ while True:
     pTime = cTime
     cv2.putText(img, "{:.1f} FPS".format(float(fps)), (70, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
 
-    img = cv2.resize(img, (960, 540))
+    img = cv2.resize(img, (1270, 720))
     cv2.imshow('Image', img)
     cv2.waitKey(1)
