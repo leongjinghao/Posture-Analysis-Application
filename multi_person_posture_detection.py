@@ -25,15 +25,20 @@ net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeights)
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
 net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
 
-# mediapipe posture analysis object instantiation
-personCount = 1
+# mediapipe posture estimator object instantiation
+personCount = 10
 mpPose = [mp.solutions.pose for i in range(personCount)]
 pose = [mpPose[i].Pose(min_detection_confidence=0.5) for i in range(personCount)]
 mpDraw = mp.solutions.drawing_utils
 
-def multiPersonPostureRecognition(outputs, img):
-    # STEP 1: Detect each person on frame (img) #
-    hT, wT, cT = img.shape
+# arrays to keep track on the coordinates of ctr point bbox used in previous frames by each of the posture estimator obj
+poseEstimatorDim = [[0.0] * 2] * personCount
+poseEstimatorInUse = []
+boxDistDiff = [0.0] * personCount
+
+def multiPersonPostureRecognition(outputs, frame):
+    # STEP 1: Detect each person on frame (frame) #
+    hT, wT, cT = frame.shape
     bbox = []
     classIds = []
     confs = []
@@ -43,7 +48,7 @@ def multiPersonPostureRecognition(outputs, img):
             # first 5 elements are the x, y values, width, height of bounding box, and detection flag
             # remaining 80 elements are the confidence level for detection of each coco.name items
             scores = det[5:]
-            # get highest scored classname identified
+            # out of the 80 elements, get index of the highest scored classname identified
             classId = np.argmax(scores)
             # if object detected is not not a person, skip this object
             if not classId == 0:
@@ -62,28 +67,44 @@ def multiPersonPostureRecognition(outputs, img):
 
     # STEP 2: Posture Recognition for each person detected #
     # for each person detected
-    poseObjIdx = 0
     for i in indicies:
         i = i[0]
         box = bbox[i]
         x, y, w, h = box[0], box[1], box[2], box[3]
+
+        # calculate center point of current person's bounding box
+        ctr_pt = [float(x + w / 2), float(y + h / 2)]
+        for j in range(personCount):
+            # if posture estimator j is in used already, prevent it from being use by current person by setting distance difference to inf
+            if j in poseEstimatorInUse:
+                boxDistDiff[j] = float("inf")
+            # else calculate the difference in distance for the center point for each posture estimator object
+            else:
+                boxDistDiff[j] = abs(poseEstimatorDim[j][0] - ctr_pt[0]) + abs(poseEstimatorDim[j][1] - ctr_pt[1])
+
+        # retrieve the index of posture estimator that was used for the person detected previously
+        # by selecting the least distance difference
+        poseObjIdx = np.argmin(boxDistDiff)
+        poseEstimatorDim[poseObjIdx] = ctr_pt
+        poseEstimatorInUse.append(poseObjIdx)
+
         # bounding box
-        cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 255), 2)
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 255), 2)
         # center point
-        # cv2.circle(img,(int(x + w/2), int(y + h/2)), 10, (0, 255, 255))
+        # cv2.circle(frame,(int(x + w/2), int(y + h/2)), 10, (0, 255, 255))
         # label for object and confidence
-        cv2.putText(img, f'{classNames[classIds[i]].upper()} {int(confs[i] * 100)}%',
+        cv2.putText(frame, f'{classNames[classIds[i]].upper()} {int(confs[i] * 100)}% {str("estimator ID ") + str(poseObjIdx)}',
                     (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
 
-        # crop the frame (crop_img) for each person detected using the bounding box para
-        crop_img = img[y: y + h, x: x + w]
-        #cv2.imshow('test', crop_img)
+        # crop the frame (crop_frame) for each person detected using the bounding box para
+        crop_frame = frame[y: y + h, x: x + w]
+        #cv2.imshow('test', crop_frame)
         #breakpoint()
-        crop_img_h, crop_img_w, _ = crop_img.shape
+        crop_frame_h, crop_frame_w, _ = crop_frame.shape
 
-        # skip if image cropped is empty
+        # skip if frame cropped is empty
         try:
-            frameRGB = cv2.cvtColor(crop_img, cv2.COLOR_BGR2RGB)
+            frameRGB = cv2.cvtColor(crop_frame, cv2.COLOR_BGR2RGB)
         except:
             continue
 
@@ -92,8 +113,8 @@ def multiPersonPostureRecognition(outputs, img):
 
         results = pose[poseObjIdx].process(frameRGB)
 
-        # draw landmarks on the cropped image
-        mpDraw.draw_landmarks(crop_img, results.pose_landmarks, mpPose[poseObjIdx].POSE_CONNECTIONS)
+        # draw landmarks on the cropped frame
+        mpDraw.draw_landmarks(crop_frame, results.pose_landmarks, mpPose[poseObjIdx].POSE_CONNECTIONS)
 
         # plot pose world lm (3D coordinates)
         #mpDraw.plot_landmarks(
@@ -107,12 +128,10 @@ def multiPersonPostureRecognition(outputs, img):
                 delimiter = '\n'
             with open('landmark_data.txt', 'a') as f:
                 f.write("{0}, {1}{2}".format(lm.x, lm.y, delimiter))
-        # increment pose object index for next person's frame
-        poseObjIdx += 1
 
 
 while True:
-    success, img = cap.read()
+    success, frame = cap.read()
 
     # if video stream ended
     if not success:
@@ -120,7 +139,7 @@ while True:
         break
 
     # inputs from frame are stored in a blob, which will be used for the model input
-    blob = cv2.dnn.blobFromImage(img, 1 / 255, (320, 320), [0, 0, 0], 1, crop=False)
+    blob = cv2.dnn.blobFromImage(frame, 1 / 255, (320, 320), [0, 0, 0], 1, crop=False)
 
     # set the blob as input for model
     net.setInput(blob)
@@ -132,16 +151,19 @@ while True:
     # retrieve object detection data
     outputs = net.forward(outputNames)
 
-    # Detect person on frame, then perform posture recognition based on cropped image of person
-    multiPersonPostureRecognition(outputs, img)
+    # reset posture estimator in use for every new frame
+    poseEstimatorInUse = []
+
+    # Detect person on frame, then perform posture recognition based on cropped frame of person
+    multiPersonPostureRecognition(outputs, frame)
 
     # show FPS
     cTime = time.time()
     fps = 1 / (cTime - pTime)
     pTime = cTime
-    cv2.putText(img, str(int(fps)), (70, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
+    cv2.putText(frame, "{:.1f} FPS".format(float(fps)), (70, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
 
     # display video stream with posture landmarks plotted
-    img = cv2.resize(img, (1270, 720))
-    cv2.imshow('Video Stream', img)
+    frame = cv2.resize(frame, (1270, 720))
+    cv2.imshow('Video Stream', frame)
     cv2.waitKey(1)
