@@ -6,7 +6,7 @@ import torch
 from pytorch_neural_network.model_training import predict, MLP
 
 # video stream source
-cap = cv2.VideoCapture('video_sample/dancing2.mp4')
+cap = cv2.VideoCapture('video_sample/goodposture.mp4')
 # confidence threshold for object detection
 confThreshold = 0.5
 # score threshold for bounding box suppression
@@ -140,8 +140,8 @@ def multiPersonPostureRecognition(outputs, frame):
             postureLm.append(lm.y)
         # if bad posture detected
         #breakpoint()
-        if predict(postureLm, model).round == 1:
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
+        if predict(postureLm, model).round() == float(1):
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
 
 while True:
