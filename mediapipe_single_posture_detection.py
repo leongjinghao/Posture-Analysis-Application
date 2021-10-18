@@ -7,13 +7,15 @@ mpPose = mp.solutions.pose
 pose = mpPose.Pose(min_detection_confidence=0.5)
 mpDraw = mp.solutions.drawing_utils
 
-cap = cv2.VideoCapture('video_sample/exercise.mp4')
+cap = cv2.VideoCapture('video_sample/goodposture.mp4')
 pTime = 0
-writeLM = True
+writeLM = False
+# 1 = bad posture data, 0 = good posture data
+posClass = 0
 
 if writeLM:
     # overwrite previous landmark data
-    open('landmark_data.txt', 'w')
+    open('pytorch_neural_network/bad_posture_log_file/landmark_data_test.txt', 'w')
 
 while True:
     success, frame = cap.read()
@@ -45,8 +47,8 @@ while True:
                 if id < 32:
                     delimiter = ', '
                 else:
-                    delimiter = '\n'
-                with open('landmark_data.txt', 'a') as f:
+                    delimiter = ', {0}\n'.format(posClass)
+                with open('pytorch_neural_network/bad_posture_log_file/landmark_data_test.txt', 'a') as f:
                     f.write("{0}, {1}{2}".format(lm.x, lm.y, delimiter))
 
     # show FPS
@@ -55,7 +57,7 @@ while True:
     pTime = cTime
     cv2.putText(frame, "{:.1f} FPS".format(float(fps)), (70, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
 
-    frame = cv2.resize(frame, (1270, 720))
+    #frame = cv2.resize(frame, (1270, 720))
     # video output with landmark plotted
     cv2.imshow("Video", frame)
     # delay
