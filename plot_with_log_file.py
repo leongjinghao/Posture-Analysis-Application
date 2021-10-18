@@ -6,7 +6,7 @@ pTime = 0
 count = 0
 
 # read landmark log file
-with open('pytorch_neural_network/bad_posture_log_file/landmark_data.txt', 'r') as f:
+with open('pytorch_neural_network/posture_log_file/landmark_data.txt', 'r') as f:
     lm_data = f.readlines()
 
 # line index of landmark log file
