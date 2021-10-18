@@ -15,7 +15,7 @@ posClass = 0
 
 if writeLM:
     # overwrite previous landmark data
-    open('pytorch_neural_network/bad_posture_log_file/landmark_data_test.txt', 'w')
+    open('pytorch_neural_network/posture_log_file/landmark_data.txt', 'w')
 
 while True:
     success, frame = cap.read()
@@ -48,7 +48,7 @@ while True:
                     delimiter = ', '
                 else:
                     delimiter = ', {0}\n'.format(posClass)
-                with open('pytorch_neural_network/bad_posture_log_file/landmark_data_test.txt', 'a') as f:
+                with open('pytorch_neural_network/posture_log_file/landmark_data.txt', 'a') as f:
                     f.write("{0}, {1}{2}".format(lm.x, lm.y, delimiter))
 
     # show FPS
