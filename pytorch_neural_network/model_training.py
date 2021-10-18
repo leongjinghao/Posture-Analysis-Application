@@ -74,9 +74,9 @@ def trainModel(train, model):
             optimizer.step()
 
 # evaluate the model
-def evaluateModel(test, model):
+def evaluateModel(test_dl, model):
     predictions, actuals = list(), list()
-    for i, (inputs, targets) in enumerate(test):
+    for i, (inputs, targets) in enumerate(test_dl):
         # evaluate the model on the test set
         yhat = model(inputs)
         # retrieve numpy array
@@ -93,19 +93,9 @@ def evaluateModel(test, model):
     acc = accuracy_score(actuals, predictions)
     return acc
 
-# make a class prediction for one row of data
-def predict(row, model):
-    # convert row to data
-    row = Tensor([row])
-    # make prediction
-    yhat = model(row)
-    # retrieve numpy array
-    yhat = yhat.detach().numpy()
-    return yhat
 
-
-if __name__=="__main__":
-    postureDataset = PostureDataset('bad_posture_log_file/landmark_data.txt')
+if __name__ == "__main__":
+    postureDataset = PostureDataset('posture_log_file/landmark_data.txt')
     train, test = postureDataset.get_splits(trainsetRatio=0.8)
 
     # print(len(train))
@@ -128,5 +118,5 @@ if __name__=="__main__":
 
     # test prediction
     testPos = [0.40465500950813293, 0.30729806423187256, 0.39920634031295776, 0.2775283753871918, 0.40185922384262085, 0.27067211270332336, 0.4050736129283905, 0.26221638917922974, 0.39394038915634155, 0.2904113531112671, 0.39280086755752563, 0.2927198112010956, 0.3916458785533905, 0.2950746715068817, 0.4215143620967865, 0.24422256648540497, 0.40267413854599, 0.28645163774490356, 0.421942800283432, 0.31036072969436646, 0.41614946722984314, 0.32054921984672546, 0.5135082602500916, 0.2850976586341858, 0.4559158682823181, 0.36824604868888855, 0.5555553436279297, 0.4776943027973175, 0.5013267397880554, 0.4939555525779724, 0.5006917715072632, 0.6175298094749451, 0.47705331444740295, 0.620148241519928, 0.48851659893989563, 0.6606314182281494, 0.4659281373023987, 0.6599661111831665, 0.47280067205429077, 0.6517767906188965, 0.4557916522026062, 0.652662992477417, 0.4768761396408081, 0.6353680491447449, 0.461587131023407, 0.6370322108268738, 0.6334103941917419, 0.4162602722644806, 0.5897025465965271, 0.4609770178794861, 0.5844500064849854, 0.6341816186904907, 0.5583183169364929, 0.6489982008934021, 0.5936256051063538, 0.9159660339355469, 0.5845736265182495, 0.8926661014556885, 0.6137014031410217, 0.9578613042831421, 0.6018709540367126, 0.9341383576393127, 0.550584077835083, 0.9841305017471313, 0.5366649627685547, 0.9545736908912659]
-    yhat = predict(testPos, model)
+    yhat = model(Tensor(testPos))
     print('Predicted: %.3f (class=%d)' % (yhat, yhat.round()))
