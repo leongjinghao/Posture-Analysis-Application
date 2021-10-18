@@ -3,10 +3,10 @@ import numpy as np
 import mediapipe as mp
 import time
 import torch
-from pytorch_neural_network.model_training import predict, MLP
+from pytorch_neural_network.model_training import predict, MLP, Tensor
 
 # video stream source
-cap = cv2.VideoCapture('video_sample/goodposture.mp4')
+cap = cv2.VideoCapture('video_sample/dancing2.mp4')
 # confidence threshold for object detection
 confThreshold = 0.5
 # score threshold for bounding box suppression
@@ -30,7 +30,7 @@ net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
 # mediapipe posture estimator object instantiation
 personCount = 10
 mpPose = [mp.solutions.pose for i in range(personCount)]
-pose = [mpPose[i].Pose(min_detection_confidence=0.5) for i in range(personCount)]
+pose = [mpPose[i].Pose(min_detection_confidence=0.8) for i in range(personCount)]
 mpDraw = mp.solutions.drawing_utils
 
 # arrays to keep track on the coordinates of ctr point bbox used in previous frames by each of the posture estimator obj
@@ -93,14 +93,6 @@ def multiPersonPostureRecognition(outputs, frame):
         poseEstimatorDim[poseObjIdx] = ctr_pt
         poseEstimatorInUse.append(poseObjIdx)
 
-        # bounding box
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        # center point
-        # cv2.circle(frame,(int(x + w/2), int(y + h/2)), 10, (0, 255, 255))
-        # label for object and confidence
-        cv2.putText(frame, f'{classNames[classIds[i]].upper()} {int(confs[i] * 100)}% {str("estimator ID ") + str(poseObjIdx)}',
-                    (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
-
         # crop the frame (crop_frame) for each person detected using the bounding box para
         crop_frame = frame[y: y + h, x: x + w]
         #cv2.imshow('test', crop_frame)
@@ -121,27 +113,36 @@ def multiPersonPostureRecognition(outputs, frame):
         # draw landmarks on the cropped frame
         mpDraw.draw_landmarks(crop_frame, results.pose_landmarks, mpPose[poseObjIdx].POSE_CONNECTIONS)
 
-        # plot pose world lm (3D coordinates)
-        #mpDraw.plot_landmarks(
-        #    results.pose_world_landmarks, mpPose[poseObjIdx].POSE_CONNECTIONS)
-
-        # if true, write landmark data into a txt file
-        # if False:
-        #     if id < 32:
-        #         delimiter = ', '
-        #     else:
-        #         delimiter = '\n'
-        #     with open('pytorch_neural_network/bad_posture_log_file/landmark_data.txt', 'a') as f:
-        #         f.write("{0}, {1}{2}".format(lm.x, lm.y, delimiter))
-
         postureLm = []
         for id, lm in enumerate(results.pose_landmarks.landmark):
             postureLm.append(lm.x)
             postureLm.append(lm.y)
+
         # if bad posture detected
-        #breakpoint()
-        if predict(postureLm, model).round() == float(1):
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
+        if model(Tensor(postureLm)).round() == float(1):
+            # bounding box colour is red
+            bboxColour = (0, 0, 255)
+
+            # write landmark data into a txt file
+            # for id, lm in enumerate(results.pose_landmarks.landmark):
+            #     if id < 32:
+            #         delimiter = ', '
+            #     else:
+            #         delimiter = '\n'
+            #     with open('pytorch_neural_network/posture_log_file/landmark_data.txt', 'a') as f:
+            #         f.write("{0}, {1}{2}".format(lm.x, lm.y, delimiter))
+
+        else:
+            # bounding box colour is green
+            bboxColour = (0, 255, 0)
+
+        # display bounding box
+        cv2.rectangle(frame, (x, y), (x + w, y + h), bboxColour, 2)
+
+        # label for object and confidence
+        cv2.putText(frame,
+                    f'{classNames[classIds[i]].upper()} {int(confs[i] * 100)}% {str("estimator ID ") + str(poseObjIdx)}',
+                    (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
 
 
 while True:
