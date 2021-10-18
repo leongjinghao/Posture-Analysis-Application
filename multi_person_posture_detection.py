@@ -2,6 +2,8 @@ import cv2
 import numpy as np
 import mediapipe as mp
 import time
+import torch
+from pytorch_neural_network.model_training import predict, MLP
 
 # video stream source
 cap = cv2.VideoCapture('video_sample/dancing2.mp4')
@@ -35,6 +37,9 @@ mpDraw = mp.solutions.drawing_utils
 poseEstimatorDim = [[0.0] * 2] * personCount
 poseEstimatorInUse = []
 boxDistDiff = [0.0] * personCount
+
+# load model
+model = torch.load('pytorch_neural_network/model.pth')
 
 def multiPersonPostureRecognition(outputs, frame):
     # STEP 1: Detect each person on frame (frame) #
@@ -89,7 +94,7 @@ def multiPersonPostureRecognition(outputs, frame):
         poseEstimatorInUse.append(poseObjIdx)
 
         # bounding box
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 255), 2)
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
         # center point
         # cv2.circle(frame,(int(x + w/2), int(y + h/2)), 10, (0, 255, 255))
         # label for object and confidence
@@ -121,13 +126,22 @@ def multiPersonPostureRecognition(outputs, frame):
         #    results.pose_world_landmarks, mpPose[poseObjIdx].POSE_CONNECTIONS)
 
         # if true, write landmark data into a txt file
-        if False:
-            if id < 32:
-                delimiter = ', '
-            else:
-                delimiter = '\n'
-            with open('landmark_data.txt', 'a') as f:
-                f.write("{0}, {1}{2}".format(lm.x, lm.y, delimiter))
+        # if False:
+        #     if id < 32:
+        #         delimiter = ', '
+        #     else:
+        #         delimiter = '\n'
+        #     with open('pytorch_neural_network/bad_posture_log_file/landmark_data.txt', 'a') as f:
+        #         f.write("{0}, {1}{2}".format(lm.x, lm.y, delimiter))
+
+        postureLm = []
+        for id, lm in enumerate(results.pose_landmarks.landmark):
+            postureLm.append(lm.x)
+            postureLm.append(lm.y)
+        # if bad posture detected
+        #breakpoint()
+        if predict(postureLm, model).round == 1:
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
 
 while True:
