@@ -6,7 +6,7 @@ import torch
 from pytorch_neural_network.model_training import MLP, Tensor
 
 # video stream source
-cap = cv2.VideoCapture('video_sample/dancing2.mp4')
+cap = cv2.VideoCapture(0)
 # confidence threshold for object detection
 confThreshold = 0.5
 # score threshold for bounding box suppression
@@ -108,7 +108,12 @@ def multiPersonPostureRecognition(outputs, frame):
         # To improve performance, optionally mark the frame as not writeable to pass by reference.
         frameRGB.flags.writeable = False
 
+        # get posture landmarks
         results = pose[poseObjIdx].process(frameRGB)
+
+        # if no posture landmark detected, continue on next frame
+        if results.pose_landmarks is None:
+            continue
 
         # draw landmarks on the cropped frame
         mpDraw.draw_landmarks(crop_frame, results.pose_landmarks, mpPose[poseObjIdx].POSE_CONNECTIONS)
