@@ -3,10 +3,10 @@ import numpy as np
 import mediapipe as mp
 import time
 import torch
-from pytorch_neural_network.model_training import MLP, Tensor
+from pytorch_neural_network.model_training import predict, MLP, Tensor
 
 # video stream source
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture('video_sample/dancing2.mp4')
 # confidence threshold for object detection
 confThreshold = 0.5
 # score threshold for bounding box suppression
@@ -124,7 +124,7 @@ def multiPersonPostureRecognition(outputs, frame):
             postureLm.append(lm.y)
 
         # if bad posture detected
-        if model(Tensor(postureLm)).round() == float(1):
+        if predict(postureLm, model).round() == float(1):
             # bounding box colour is red
             bboxColour = (0, 0, 255)
 
