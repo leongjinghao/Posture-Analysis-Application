@@ -3,7 +3,7 @@ import numpy as np
 import mediapipe as mp
 import time
 import torch
-from pytorch_neural_network.model_training import predict, MLP, Tensor
+from pytorch_neural_network.model_training import predict, MLP
 
 # video stream source
 cap = cv2.VideoCapture('video_sample/dancing2.mp4')
