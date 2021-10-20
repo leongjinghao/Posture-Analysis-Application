@@ -8,7 +8,7 @@ from torch.nn import BCELoss
 from numpy import vstack
 from sklearn.metrics import accuracy_score
 from torch.nn import Module
-from pytorch_neural_network.posture_dataset import PostureDataset
+from neural_network.posture_dataset import PostureDataset
 from torch.nn.init import kaiming_uniform_
 from torch.nn.init import xavier_uniform_
 

@@ -3,7 +3,7 @@ import numpy as np
 import mediapipe as mp
 import time
 import torch
-from pytorch_neural_network.model_training import predict, MLP
+from neural_network.model_training import predict, MLP
 
 # video stream source
 cap = cv2.VideoCapture('video_sample/dancing2.mp4')
@@ -39,7 +39,7 @@ poseEstimatorInUse = []
 boxDistDiff = [0.0] * personCount
 
 # load model
-model = torch.load('pytorch_neural_network/model.pth')
+model = torch.load('neural_network/model.pth')
 
 def multiPersonPostureRecognition(outputs, frame):
     # STEP 1: Detect each person on frame (frame) #
@@ -134,7 +134,7 @@ def multiPersonPostureRecognition(outputs, frame):
             #         delimiter = ', '
             #     else:
             #         delimiter = '\n'
-            #     with open('pytorch_neural_network/posture_log_file/landmark_data.txt', 'a') as f:
+            #     with open('neural_network/posture_log_file/landmark_data.txt', 'a') as f:
             #         f.write("{0}, {1}{2}".format(lm.x, lm.y, delimiter))
 
         else:

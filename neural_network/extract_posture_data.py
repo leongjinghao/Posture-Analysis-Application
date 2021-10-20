@@ -3,7 +3,7 @@ import numpy as np
 import mediapipe as mp
 import time
 
-cap = cv2.VideoCapture('../video_sample/goodposture.mp4')
+cap = cv2.VideoCapture('../video_sample/goodposture2.mp4')
 # 1 = bad posture data, 0 = good posture data
 posClass = 0
 whT = 320
@@ -65,29 +65,39 @@ def findObjects(outputs, img):
         crop_img = img[y: y + h, x: x + w]
         crop_img_h, crop_img_w, _ = crop_img.shape
 
-        results = pose.process(cv2.cvtColor(crop_img, cv2.COLOR_BGR2RGB))
+        # skip if frame cropped is empty
+        try:
+            results = pose.process(cv2.cvtColor(crop_img, cv2.COLOR_BGR2RGB))
+        except:
+            continue
 
-        # plot if landmark is detected
-        if results.pose_landmarks:
+        # if no posture landmark detected, continue on next frame
+        if results.pose_landmarks is None:
+            continue
 
-            # draw landmarks on the image
-            mpDraw.draw_landmarks(
-                crop_img,
-                results.pose_landmarks,
-                mpPose.POSE_CONNECTIONS)
+        # draw landmarks on the image
+        mpDraw.draw_landmarks(
+            crop_img,
+            results.pose_landmarks,
+            mpPose.POSE_CONNECTIONS)
 
-            # log landmarks data
-            for id, lm in enumerate(results.pose_landmarks.landmark):
-                if id < 32:
-                    delimiter = ', '
-                else:
-                    delimiter = ', {0}\n'.format(posClass)
-                with open('posture_log_file/landmark_data.txt', 'a') as f:
-                    f.write("{0}, {1}{2}".format(lm.x, lm.y, delimiter))
+        # log landmarks data
+        for id, lm in enumerate(results.pose_landmarks.landmark):
+            if id < 32:
+                delimiter = ', '
+            else:
+                delimiter = ', {0}\n'.format(posClass)
+            with open('posture_log_file/landmark_data.txt', 'a') as f:
+                f.write("{0}, {1}{2}".format(lm.x, lm.y, delimiter))
 
 
 while True:
     success, img = cap.read()
+
+    # if video stream ended
+    if not success:
+        print('End of video stream...')
+        break
 
     blob = cv2.dnn.blobFromImage(img, 1 / 255, (whT, whT), [0, 0, 0], 1, crop=False)
     net.setInput(blob)
@@ -106,6 +116,6 @@ while True:
     pTime = cTime
     cv2.putText(img, "{:.1f} FPS".format(float(fps)), (70, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
 
-    img = cv2.resize(img, (1270, 720))
+    #img = cv2.resize(img, (1270, 720))
     cv2.imshow('Image', img)
     cv2.waitKey(1)
