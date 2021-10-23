@@ -6,7 +6,7 @@ pTime = 0
 count = 0
 
 # read landmark log file
-with open('landmark_data.txt', 'r') as f:
+with open('neural_network/posture_log_file/landmark_data.txt', 'r') as f:
     lm_data = f.readlines()
 
 # line index of landmark log file
@@ -14,6 +14,9 @@ lineIndex = 0
 
 while True:
     success, frame = cap.read()
+
+    if not success:
+        break
 
     line = lm_data[lineIndex]
     coordinates = line.replace('\n', '').split(', ')
