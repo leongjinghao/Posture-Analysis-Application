@@ -73,6 +73,10 @@ def trainModel(train, model):
             # update model weights
             optimizer.step()
 
+        # print loss value for every 10 epochs (iteration)
+        if epoch % 10 == 0:
+            print('Epoch %d, Loss %f' % (epoch, float(loss)))
+
 # evaluate the model
 def evaluateModel(test_dl, model):
     predictions, actuals = list(), list()
