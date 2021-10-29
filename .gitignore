@@ -7,6 +7,8 @@ neural_network/posture_log_file/landmark_data.txt
 # YOLO model .cfg & .weights files
 *.cfg
 *.weights
-# opencv_CUDA_enable build and install folder
+# opencv_CUDA_enable source file, build and install folder
+opencv_CUDA_enable/opencv-4.5.4
+opencv_CUDA_enable/opencv_contrib-4.5.4
 opencv_CUDA_enable/build
 opencv_CUDA_enable/install
