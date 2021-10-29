@@ -1,4 +1,4 @@
-## OpenCV GPU enabled build walk through
+## OpenCV CUDA enabled build walk through
 > https://www.youtube.com/watch?v=YsmhKar8oOc
 ## wikipedia reference
 > https://en.wikipedia.org/wiki/CUDA
