@@ -1,7 +1,7 @@
 # 2021/2022 - Team 03 Project Introduction
 
 ## Libraries Installation Guide 
-- OpenCV
+- OpenCV (CPU only)
 > -pip install opencv-python
 - Matplotlib
 > -pip install matplotlib
