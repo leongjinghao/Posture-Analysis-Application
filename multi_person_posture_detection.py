@@ -73,7 +73,6 @@ def multiPersonPostureRecognition(outputs, frame):
     # STEP 2: Posture Recognition for each person detected #
     # for each person detected
     for i in indicies:
-        i = i[0]
         box = bbox[i]
         x, y, w, h = box[0], box[1], box[2], box[3]
 
@@ -127,16 +126,7 @@ def multiPersonPostureRecognition(outputs, frame):
         if predict(postureLm, model).round() == float(1):
             # bounding box colour is red
             bboxColour = (0, 0, 255)
-
-            # write landmark data into a txt file
-            # for id, lm in enumerate(results.pose_landmarks.landmark):
-            #     if id < 32:
-            #         delimiter = ', '
-            #     else:
-            #         delimiter = '\n'
-            #     with open('neural_network/posture_log_file/landmark_data.txt', 'a') as f:
-            #         f.write("{0}, {1}{2}".format(lm.x, lm.y, delimiter))
-
+        # else, it is a good posture
         else:
             # bounding box colour is green
             bboxColour = (0, 255, 0)
@@ -166,7 +156,7 @@ while True:
 
     # YOLO's 3 output layers
     layerNames = net.getLayerNames()
-    outputNames = [layerNames[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+    outputNames = [layerNames[i - 1] for i in net.getUnconnectedOutLayers()]
 
     # retrieve object detection data
     outputs = net.forward(outputNames)

@@ -44,7 +44,6 @@ def findObjects(outputs, img):
     indicies = cv2.dnn.NMSBoxes(bbox, confs, confThreshold, nmsThreshold)
 
     for i in indicies:
-        i = i[0]
         box = bbox[i]
         x, y, w, h = box[0], box[1], box[2], box[3]
         # bounding box
@@ -53,14 +52,19 @@ def findObjects(outputs, img):
         cv2.putText(img, f'{classNames[classIds[i]].upper()} {int(confs[i] * 100)}%',
                     (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
 
+
 while True:
     success, img = cap.read()
+
+    if not success:
+        print('End of video stream...')
+        break
 
     blob = cv2.dnn.blobFromImage(img, 1/255, (whT, whT), [0, 0, 0], 1, crop=False)
     net.setInput(blob)
 
     layerNames = net.getLayerNames()
-    outputNames = [layerNames[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+    outputNames = [layerNames[i - 1] for i in net.getUnconnectedOutLayers()]
     #print(outputNames)
 
     outputs = net.forward(outputNames)
