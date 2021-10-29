@@ -1,12 +1,12 @@
 import cv2
 import time
 
-cap = cv2.VideoCapture('video_sample/exercise.mp4')
+cap = cv2.VideoCapture('../video_sample/exercise.mp4')
 pTime = 0
 count = 0
 
 # read landmark log file
-with open('neural_network/posture_log_file/landmark_data.txt', 'r') as f:
+with open('../neural_network/posture_log_file/landmark_data.txt', 'r') as f:
     lm_data = f.readlines()
 
 # line index of landmark log file
@@ -30,7 +30,7 @@ while True:
         cv2.circle(frame, (xPixelValue, yPixelValue), 3, (255, 0, 255), cv2.FILLED)
 
     # increment to next line in landmark log file
-    lineIndex += 1
+    lineIndex += 2
 
     # show FPS
     cTime = time.time()
