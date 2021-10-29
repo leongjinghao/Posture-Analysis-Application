@@ -7,6 +7,8 @@ whT = 320
 confThreshold = 0.5
 nmsThreshold = 0.3
 pTime = 0
+tFps = 0.0
+tFrame = 0
 
 classNames = []
 with open('../YOLO_config/coco.names', 'rt') as f:
@@ -56,6 +58,7 @@ def findObjects(outputs, img):
 while True:
     success, img = cap.read()
     if not success:
+        print('Average FPS: {0}'.format(tFps / tFrame))
         print('End of video stream...')
         break
     blob = cv2.dnn.blobFromImage(img, 1/255, (whT, whT), [0, 0, 0], 1, crop=False)
@@ -74,6 +77,9 @@ while True:
     fps = 1 / (cTime - pTime)
     pTime = cTime
     cv2.putText(img, "{:.1f} FPS".format(float(fps)), (70, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
+
+    tFps += fps
+    tFrame += 1
 
     img = cv2.resize(img, (1270, 720))
     cv2.imshow('Image', img)
