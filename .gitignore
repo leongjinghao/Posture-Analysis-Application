@@ -1,7 +1,7 @@
 # Python Files
 *.pyc
 # landmark data
-neural_network/posture_log_file/landmark_data.txt
+model_training/posture_log_file/landmark_data.txt
 # pycharm files
 .idea
 # YOLO model .cfg & .weights files
