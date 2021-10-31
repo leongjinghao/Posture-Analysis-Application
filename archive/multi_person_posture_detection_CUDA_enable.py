@@ -3,7 +3,7 @@ import numpy as np
 import mediapipe as mp
 import time
 import torch
-from neural_network.model_training import predict, MLP
+from model_training.model_training import predict, MLP
 
 
 # video stream source
