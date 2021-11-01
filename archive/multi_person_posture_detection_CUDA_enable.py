@@ -58,7 +58,7 @@ def multiPersonPostureRecognition(outputs, frame):
             classId = np.argmax(scores)
             # if object detected is not not a person, skip this object
             if not classId == 0:
-                break
+                continue
             confidence = scores[classId]
             # if confidence level for person detected is higher than threshold, store the bounding box param
             if confidence > confThreshold:

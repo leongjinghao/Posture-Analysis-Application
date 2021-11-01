@@ -34,7 +34,7 @@ def findObjects(outputs, img):
             classId = np.argmax(scores)
             # filter for person
             if not classId == 0:
-                break
+                continue
             confidence = scores[classId]
             if confidence > confThreshold:
                 w, h = int(det[2] * wT), int(det[3] * hT)
