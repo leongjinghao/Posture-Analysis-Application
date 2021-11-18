@@ -11,3 +11,5 @@
 > -pip install sklearn
 - Pandas
 > -pip install pandas
+- Shapely
+> -pip install shapely
