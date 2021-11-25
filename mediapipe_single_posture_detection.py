@@ -15,7 +15,7 @@ posClass = 0
 
 if writeLM:
     # overwrite previous landmark data
-    open('model_training/posture_log_file/landmark_data.txt', 'w')
+    open('model_training/posture_log_file/landmark_data_normalzone.txt', 'w')
 
 while True:
     success, frame = cap.read()
@@ -48,7 +48,7 @@ while True:
                     delimiter = ', '
                 else:
                     delimiter = ', {0}\n'.format(posClass)
-                with open('model_training/posture_log_file/landmark_data.txt', 'a') as f:
+                with open('model_training/posture_log_file/landmark_data_normalzone.txt', 'a') as f:
                     f.write("{0}, {1}{2}".format(lm.x, lm.y, delimiter))
 
     # show FPS
