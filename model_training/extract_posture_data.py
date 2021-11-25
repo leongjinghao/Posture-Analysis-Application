@@ -3,9 +3,9 @@ import numpy as np
 import mediapipe as mp
 import time
 
-cap = cv2.VideoCapture('../video_sample/goodposture2.mp4')
+cap = cv2.VideoCapture('../video_sample/badposture_dangerzone.mp4')
 # 1 = bad posture data, 0 = good posture data
-posClass = 0
+posClass = 1
 whT = 320
 confThreshold = 0.5
 nmsThreshold = 0.3
@@ -52,7 +52,6 @@ def findObjects(outputs, img):
     indicies = cv2.dnn.NMSBoxes(bbox, confs, confThreshold, nmsThreshold, top_k=1)
 
     for i in indicies:
-        i = i[0]
         box = bbox[i]
         x, y, w, h = box[0], box[1], box[2], box[3]
         # bounding box
@@ -87,7 +86,7 @@ def findObjects(outputs, img):
                 delimiter = ', '
             else:
                 delimiter = ', {0}\n'.format(posClass)
-            with open('posture_log_file/landmark_data.txt', 'a') as f:
+            with open('posture_log_file/landmark_data_dangerzone.txt', 'a') as f:
                 f.write("{0}, {1}{2}".format(lm.x, lm.y, delimiter))
 
 
@@ -103,7 +102,7 @@ while True:
     net.setInput(blob)
 
     layerNames = net.getLayerNames()
-    outputNames = [layerNames[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+    outputNames = [layerNames[i - 1] for i in net.getUnconnectedOutLayers()]
     # print(outputNames)
 
     outputs = net.forward(outputNames)
