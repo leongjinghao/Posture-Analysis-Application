@@ -1,7 +1,8 @@
 # Python Files
 *.pyc
 # landmark data
-model_training/posture_log_file/landmark_data.txt
+model_training/posture_log_file/landmark_data_normalzone.txt
+model_training/posture_log_file/landmark_data_dangerzone.txt
 # pycharm files
 .idea
 # YOLO model .cfg & .weights files
