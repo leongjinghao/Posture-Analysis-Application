@@ -3,10 +3,10 @@ import numpy as np
 import mediapipe as mp
 import time
 import torch
-from model_training.model_training import predict, MLP
+from model_training.train_model import predict, MLP
 
 # video stream source
-cap = cv2.VideoCapture('video_sample/dancing2.mp4')
+cap = cv2.VideoCapture(0)
 # confidence threshold for object detection
 confThreshold = 0.5
 # score threshold for bounding box suppression
