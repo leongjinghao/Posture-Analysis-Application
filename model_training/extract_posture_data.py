@@ -4,8 +4,9 @@ import mediapipe as mp
 import time
 
 cap = cv2.VideoCapture('../video_sample/badposture_dangerzone.mp4')
+logFilePath = 'posture_log_file/landmark_data_normalzone.txt'
 # 1 = bad posture data, 0 = good posture data
-posClass = 1
+posClass = 0
 whT = 320
 confThreshold = 0.5
 nmsThreshold = 0.3
@@ -86,7 +87,7 @@ def findObjects(outputs, img):
                 delimiter = ', '
             else:
                 delimiter = ', {0}\n'.format(posClass)
-            with open('posture_log_file/landmark_data_dangerzone.txt', 'a') as f:
+            with open(logFilePath, 'a') as f:
                 f.write("{0}, {1}{2}".format(lm.x, lm.y, delimiter))
 
 
