@@ -39,7 +39,7 @@ poseEstimatorInUse = []
 boxDistDiff = [0.0] * personCount
 
 # load model
-model = torch.load('model_training/model.pth')
+model = torch.load('model_training/normal_zone_model.pth')
 
 def multiPersonPostureRecognition(outputs, frame):
     # STEP 1: Detect each person on frame (frame) #
