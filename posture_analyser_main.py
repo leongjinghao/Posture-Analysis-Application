@@ -1,13 +1,15 @@
+import sys
 import cv2
 import numpy as np
 import mediapipe as mp
 import time
 import torch
 from model_training.train_model import predict, MLP
+from shapely.geometry import Polygon
 
 # video stream source
 cap = cv2.VideoCapture(0)
-# confidence threshold for object detection
+# confidence threshold for person detection
 confThreshold = 0.5
 # score threshold for bounding box suppression
 nmsThreshold = 0.3
@@ -39,7 +41,16 @@ poseEstimatorInUse = []
 boxDistDiff = [0.0] * personCount
 
 # load model
-model = torch.load('model_training/normal_zone_model.pth')
+normalZoneModel = torch.load('model_training/normal_zone_model.pth')
+dangerZoneModel = torch.load('model_training/danger_zone_model.pth')
+
+# coordinates of danger zones
+dangerZone = [[[20, 60], [150, 120], [150, 360], [20, 420]],
+              # [[620, 60], [490, 120], [490, 360], [620, 420]]
+              [[240, 50], [400, 50], [400, 450], [240, 450]]]
+# create a polygon for each danger zone
+dangerZonePolygon = [Polygon(dangerZone[i]) for i in range(len(dangerZone))]
+
 
 def multiPersonPostureRecognition(outputs, frame):
     # STEP 1: Detect each person on frame (frame) #
@@ -68,18 +79,19 @@ def multiPersonPostureRecognition(outputs, frame):
                 confs.append(float(confidence))
 
     # suppress duplicated bounding boxes
-    indicies = cv2.dnn.NMSBoxes(bbox, confs, confThreshold, nmsThreshold, top_k=personCount)
+    indices = cv2.dnn.NMSBoxes(bbox, confs, confThreshold, nmsThreshold, top_k=personCount)
 
-    # STEP 2: Posture Recognition for each person detected #
+    # STEP 2: Posture Detection for each person detected #
     # for each person detected
-    for i in indicies:
+    for i in indices:
         box = bbox[i]
         x, y, w, h = box[0], box[1], box[2], box[3]
 
         # calculate center point of current person's bounding box
         ctr_pt = [float(x + w / 2), float(y + h / 2)]
         for j in range(personCount):
-            # if posture estimator j is in used already, prevent it from being use by current person by setting distance difference to inf
+            # if posture estimator j is in used already, prevent it from being use by current person
+            # by setting distance difference to inf
             if j in poseEstimatorInUse:
                 boxDistDiff[j] = float("inf")
             # else calculate the difference in distance for the center point for each posture estimator object
@@ -94,8 +106,6 @@ def multiPersonPostureRecognition(outputs, frame):
 
         # crop the frame (crop_frame) for each person detected using the bounding box para
         crop_frame = frame[y: y + h, x: x + w]
-        #cv2.imshow('test', crop_frame)
-        #breakpoint()
         crop_frame_h, crop_frame_w, _ = crop_frame.shape
 
         # skip if frame cropped is empty
@@ -117,19 +127,54 @@ def multiPersonPostureRecognition(outputs, frame):
         # draw landmarks on the cropped frame
         mpDraw.draw_landmarks(crop_frame, results.pose_landmarks, mpPose[poseObjIdx].POSE_CONNECTIONS)
 
+        # bundle landmarks data of person together to be used for model feedforward for posture recognition
         postureLm = []
-        for id, lm in enumerate(results.pose_landmarks.landmark):
+        for _, lm in enumerate(results.pose_landmarks.landmark):
             postureLm.append(lm.x)
             postureLm.append(lm.y)
 
-        # if bad posture detected
-        if predict(postureLm, model).round() == float(1):
-            # bounding box colour is red
-            bboxColour = (0, 0, 255)
-        # else, it is a good posture
+        # STEP 3: Check if person is in danger zone, use the respective models for posture recognition #
+        # create polygon of person using bounding box coordinates
+        personPolygon = Polygon([[x, y], [x + w, y], [x + w, y + h], [x, y + h]])
+
+        # danger zone intersection flag to capture if person detected is in danger zone, false by default
+        intersectFlag = False
+
+        # calculate the intersection of polygons for person detected and each danger zone
+        for j in range(len(dangerZonePolygon)):
+            intersection = personPolygon.intersects(dangerZonePolygon[j])
+
+            # calculate the ratio of intersection area to the person's bounding box
+            intersectAreaRatio = personPolygon.intersection(dangerZonePolygon[j]).area / personPolygon.area
+
+            # if person is in the danger zone, and ratio of intersecting area is over threshold,
+            # set intersection flag = true
+            if (intersection is True) and (intersectAreaRatio > 0.5):
+                intersectFlag = True
+
+                # break out of loop once person is detected in any danger zone, for optimisation
+                break
+
+        # if person detected is in one of the danger zone
+        if intersectFlag is True:
+            # if bad posture detected
+            if predict(postureLm, dangerZoneModel).round() == float(1):
+                # bounding box colour is purple
+                bboxColour = (255, 0, 255)
+            # else, it is a good posture
+            else:
+                # bounding box colour is cyan
+                bboxColour = (255, 255, 0)
+        # else person is not in any danger zone
         else:
-            # bounding box colour is green
-            bboxColour = (0, 255, 0)
+            # if bad posture detected
+            if predict(postureLm, normalZoneModel).round() == float(1):
+                # bounding box colour is red
+                bboxColour = (0, 0, 255)
+            # else, it is a good posture
+            else:
+                # bounding box colour is green
+                bboxColour = (0, 255, 0)
 
         # display bounding box
         cv2.rectangle(frame, (x, y), (x + w, y + h), bboxColour, 2)
@@ -139,14 +184,21 @@ def multiPersonPostureRecognition(outputs, frame):
                     f'{classNames[classIds[i]].upper()} {int(confs[i] * 100)}% {str("estimator ID ") + str(poseObjIdx)}',
                     (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
 
-
-while True:
+def main():
+    global pTime
+    global poseEstimatorInUse
     success, frame = cap.read()
 
     # if video stream ended
     if not success:
         print('End of video stream...')
-        break
+        sys.exit()
+
+    # convert coordinates (pts) of all danger zone to int32 format
+    pts = [np.array(dangerZone[i], np.int32) for i in range(len(dangerZone))]
+    # plot polygons of all danger zones on video steam
+    for i in range(len(dangerZone)):
+        cv2.polylines(frame, [pts[i]], True, (255, 0, 0), 2)
 
     # inputs from frame are stored in a blob, which will be used for the model input
     blob = cv2.dnn.blobFromImage(frame, 1 / 255, (320, 320), [0, 0, 0], 1, crop=False)
@@ -177,3 +229,8 @@ while True:
     frame = cv2.resize(frame, (1270, 720))
     cv2.imshow('Video Stream', frame)
     cv2.waitKey(1)
+
+
+if __name__ == "__main__":
+    while True:
+        main()

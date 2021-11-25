@@ -6,7 +6,7 @@ pTime = 0
 count = 0
 
 # read landmark log file
-with open('../model_training/posture_log_file/landmark_data.txt', 'r') as f:
+with open('../model_training/posture_log_file/landmark_data_normalzone.txt', 'r') as f:
     lm_data = f.readlines()
 
 # line index of landmark log file

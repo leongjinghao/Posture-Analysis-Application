@@ -3,7 +3,7 @@ import numpy as np
 import mediapipe as mp
 import time
 import torch
-from model_training.model_training import predict, MLP
+from model_training.train_model import predict, MLP
 
 
 # video stream source
@@ -40,7 +40,7 @@ poseEstimatorInUse = []
 boxDistDiff = [0.0] * personCount
 
 # load model
-model = torch.load('../model_training/model.pth')
+model = torch.load('../model_training/normal_zone_model.pth')
 
 def multiPersonPostureRecognition(outputs, frame):
     # STEP 1: Detect each person on frame (frame) #
