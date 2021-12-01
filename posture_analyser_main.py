@@ -41,12 +41,13 @@ poseEstimatorInUse = []
 boxDistDiff = [0.0] * personCount
 
 # load model
-normalZoneModel = torch.load('model_training/normal_zone_model.pth')
-dangerZoneModel = torch.load('model_training/danger_zone_model.pth')
+normalZoneModel = torch.load('model_training/models/normal_zone_model.pth')
+dangerZoneModel = torch.load('model_training/models/danger_zone_model.pth')
 
 # coordinates of danger zones
-dangerZone = [[[20, 60], [150, 120], [150, 360], [20, 420]],
-              # [[620, 60], [490, 120], [490, 360], [620, 420]]
+dangerZone = [
+              # [[20, 60], [150, 120], [150, 360], [20, 420]],
+               [[620, 60], [490, 120], [490, 360], [620, 420]],
               [[240, 50], [400, 50], [400, 450], [240, 450]]]
 # create a polygon for each danger zone
 dangerZonePolygon = [Polygon(dangerZone[i]) for i in range(len(dangerZone))]
