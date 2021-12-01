@@ -3,6 +3,8 @@
 ## Libraries Installation Guide 
 - OpenCV (CPU only)
 > -pip install opencv-python
+- MediaPipe
+> -pip install mediapipe
 - Matplotlib
 > -pip install matplotlib
 - PyTorch
