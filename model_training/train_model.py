@@ -18,7 +18,7 @@ torch.backends.cudnn.benchmark = True
 
 # file path configuration
 logFilePath = 'posture_log_file/landmark_data_dangerzone.txt'
-modelFilePath = 'danger_zone_model.pth'
+modelFilePath = 'models/danger_zone_model.pth'
 
 class MLP(Module):
     # constructor to setup the neural network
