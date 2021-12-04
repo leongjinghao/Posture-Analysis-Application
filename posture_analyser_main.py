@@ -51,6 +51,8 @@ dangerZone = [
               [[240, 50], [400, 50], [400, 450], [240, 450]]]
 # create a polygon for each danger zone
 dangerZonePolygon = [Polygon(dangerZone[i]) for i in range(len(dangerZone))]
+# threshold of intersection ratio
+intersectionThreshold = 0.8
 
 
 def multiPersonPostureRecognition(outputs, frame):
@@ -150,7 +152,7 @@ def multiPersonPostureRecognition(outputs, frame):
 
             # if person is in the danger zone, and ratio of intersecting area is over threshold,
             # set intersection flag = true
-            if (intersection is True) and (intersectAreaRatio > 0.5):
+            if (intersection is True) and (intersectAreaRatio > intersectionThreshold):
                 intersectFlag = True
 
                 # break out of loop once person is detected in any danger zone, for optimisation
