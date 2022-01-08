@@ -36,3 +36,7 @@ pip install numpy
 ```
 pip install scikit-learn
 ```
+## Requests
+```
+pip install requests
+```
