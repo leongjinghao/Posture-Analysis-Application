@@ -6,6 +6,8 @@ import time
 import torch
 from model_training.train_model import predict, MLP
 from shapely.geometry import Polygon
+import requests
+from urllib3.exceptions import InsecureRequestWarning
 
 # video stream source
 cap = cv2.VideoCapture(0)
@@ -18,12 +20,12 @@ pTime = 0
 
 # coco class name
 classNames = []
-with open('YOLO_config/coco.names', 'rt') as f:
+with open('python_scripts/YOLO_config/coco.names', 'rt') as f:
     classNames = f.read().rstrip('\n').split('\n')
 
 # YOLO model configurations
-modelConfiguration = 'YOLO_config/yolov4-tiny.cfg'
-modelWeights = 'YOLO_config/yolov4-tiny.weights'
+modelConfiguration = 'python_scripts/YOLO_config/yolov4-tiny.cfg'
+modelWeights = 'python_scripts/YOLO_config/yolov4-tiny.weights'
 
 net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeights)
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
@@ -41,8 +43,8 @@ poseEstimatorInUse = []
 boxDistDiff = [0.0] * personCount
 
 # load model
-normalZoneModel = torch.load('model_training/models/normal_zone_model.pth')
-dangerZoneModel = torch.load('model_training/models/danger_zone_model.pth')
+normalZoneModel = torch.load('python_scripts/model_training/models/normal_zone_model.pth')
+dangerZoneModel = torch.load('python_scripts/model_training/models/danger_zone_model.pth')
 
 # coordinates of danger zones
 dangerZone = [
@@ -54,6 +56,8 @@ dangerZonePolygon = [Polygon(dangerZone[i]) for i in range(len(dangerZone))]
 # threshold of intersection ratio
 intersectionThreshold = 0.8
 
+# suppress wanning from SSL verification
+requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
 
 def multiPersonPostureRecognition(outputs, frame):
     # STEP 1: Detect each person on frame (frame) #
@@ -164,20 +168,48 @@ def multiPersonPostureRecognition(outputs, frame):
             if predict(postureLm, dangerZoneModel).round() == float(1):
                 # bounding box colour is purple
                 bboxColour = (255, 0, 255)
+                # log bad posture detected in database through post request
+                requests.post(
+                    url = "https://localhost:5001/PostureLog", 
+                    json = {'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
+                            'classification': 'bad'},
+                    verify = False)
+
             # else, it is a good posture
             else:
                 # bounding box colour is cyan
                 bboxColour = (255, 255, 0)
+                # log good posture detected in database through post request
+                requests.post(
+                    url = "https://localhost:5001/PostureLog", 
+                    json = {'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
+                            'classification': 'good'},
+                    verify = False)
+
         # else person is not in any danger zone
         else:
             # if bad posture detected
             if predict(postureLm, normalZoneModel).round() == float(1):
                 # bounding box colour is red
                 bboxColour = (0, 0, 255)
+                # log bad posture detected in database through post request
+                requests.post(
+                    url = "https://localhost:5001/PostureLog", 
+                    json = {'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
+                            'classification': 'bad'},
+                    verify = False)
+            
             # else, it is a good posture
             else:
                 # bounding box colour is green
                 bboxColour = (0, 255, 0)
+                # log good posture detected in database through post request
+                # with ignore_SSL.no_ssl_verification:
+                requests.post(
+                    url = "https://localhost:5001/PostureLog", 
+                    json = {'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
+                            'classification': 'good'},
+                    verify = False)
 
         # display bounding box
         cv2.rectangle(frame, (x, y), (x + w, y + h), bboxColour, 2)
