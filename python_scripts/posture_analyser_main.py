@@ -204,7 +204,6 @@ def multiPersonPostureRecognition(outputs, frame):
                 # bounding box colour is green
                 bboxColour = (0, 255, 0)
                 # log good posture detected in database through post request
-                # with ignore_SSL.no_ssl_verification:
                 requests.post(
                     url = "https://localhost:5001/PostureLog", 
                     json = {'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
