@@ -1,0 +1,12 @@
+using System;
+
+namespace PostureLogApi.Models
+{
+    public class PostureLog
+    {
+        public int Id { get; set; }
+        public DateTime DateTime { get; set; }
+        public string PostureLandmarks { get; set; }
+        public string Classification { get; set; }
+    }
+}
