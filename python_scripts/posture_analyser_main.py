@@ -9,8 +9,6 @@ from shapely.geometry import Polygon
 import requests
 from urllib3.exceptions import InsecureRequestWarning
 
-# video stream source
-cap = cv2.VideoCapture(0)
 # confidence threshold for person detection
 confThreshold = 0.5
 # score threshold for bounding box suppression
@@ -218,9 +216,10 @@ def multiPersonPostureRecognition(outputs, frame):
                     f'{classNames[classIds[i]].upper()} {int(confs[i] * 100)}% {str("estimator ID ") + str(poseObjIdx)}',
                     (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
 
-def main():
+def instance(source):    
     global pTime
     global poseEstimatorInUse
+    
     success, frame = cap.read()
 
     # if video stream ended
@@ -266,5 +265,11 @@ def main():
 
 
 if __name__ == "__main__":
+    # CLI argument(s)
+    args = sys.argv[1:]
+
+    # video stream source
+    cap = cv2.VideoCapture(args[0])
+    
     while True:
-        main()
+        instance(cap)
