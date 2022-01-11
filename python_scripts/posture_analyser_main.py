@@ -1,13 +1,20 @@
+import ast
 import sys
 import cv2
 import numpy as np
 import mediapipe as mp
 import time
 import torch
+import requests
 from model_training.train_model import predict, MLP
 from shapely.geometry import Polygon
-import requests
 from urllib3.exceptions import InsecureRequestWarning
+
+# CLI argument(s)
+args = sys.argv[1:]
+
+# video stream source
+cap = cv2.VideoCapture(args[0])
 
 # confidence threshold for person detection
 confThreshold = 0.5
@@ -44,11 +51,21 @@ boxDistDiff = [0.0] * personCount
 normalZoneModel = torch.load('python_scripts/model_training/models/normal_zone_model.pth')
 dangerZoneModel = torch.load('python_scripts/model_training/models/danger_zone_model.pth')
 
-# coordinates of danger zones
-dangerZone = [
-              # [[20, 60], [150, 120], [150, 360], [20, 420]],
-               [[620, 60], [490, 120], [490, 360], [620, 420]],
-              [[240, 50], [400, 50], [400, 450], [240, 450]]]
+# retieve entries of danger zone coordinates according to the cameraId specified in CLI argument
+response = requests.get("https://localhost:5001/DangerZoneCoordinates/" + str(args[1]), verify=False)
+# interprete using json format
+data = response.json()
+# list to store all the danger zone coordinates for the cameraId specified
+dangerZone = []
+# append entries of danger zone coordinates retrieved into the list
+for row in data:
+    dangerZone.append(ast.literal_eval("[" + row["coordinates"] + "]"))
+
+# dangerZone = [
+#               # [[20, 60], [150, 120], [150, 360], [20, 420]],
+#                [[620, 60], [490, 120], [490, 360], [620, 420]],
+#               [[240, 50], [400, 50], [400, 450], [240, 450]]]
+
 # create a polygon for each danger zone
 dangerZonePolygon = [Polygon(dangerZone[i]) for i in range(len(dangerZone))]
 # threshold of intersection ratio
@@ -169,7 +186,9 @@ def multiPersonPostureRecognition(outputs, frame):
                 # log bad posture detected in database through post request
                 requests.post(
                     url = "https://localhost:5001/PostureLog", 
-                    json = {'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
+                    json = {'cameraId': int(args[1]),
+                            'zone': 'danger',
+                            'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
                             'classification': 'bad'},
                     verify = False)
 
@@ -180,7 +199,9 @@ def multiPersonPostureRecognition(outputs, frame):
                 # log good posture detected in database through post request
                 requests.post(
                     url = "https://localhost:5001/PostureLog", 
-                    json = {'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
+                    json = {'cameraId': int(args[1]),
+                            'zone': 'danger',
+                            'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
                             'classification': 'good'},
                     verify = False)
 
@@ -193,7 +214,9 @@ def multiPersonPostureRecognition(outputs, frame):
                 # log bad posture detected in database through post request
                 requests.post(
                     url = "https://localhost:5001/PostureLog", 
-                    json = {'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
+                    json = {'cameraId': int(args[1]),
+                            'zone': 'normal',
+                            'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
                             'classification': 'bad'},
                     verify = False)
             
@@ -204,7 +227,9 @@ def multiPersonPostureRecognition(outputs, frame):
                 # log good posture detected in database through post request
                 requests.post(
                     url = "https://localhost:5001/PostureLog", 
-                    json = {'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
+                    json = {'cameraId': int(args[1]),
+                            'zone': 'normal',
+                            'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
                             'classification': 'good'},
                     verify = False)
 
@@ -265,11 +290,7 @@ def instance(source):
 
 
 if __name__ == "__main__":
-    # CLI argument(s)
-    args = sys.argv[1:]
 
-    # video stream source
-    cap = cv2.VideoCapture(args[0])
     
     while True:
         instance(cap)
