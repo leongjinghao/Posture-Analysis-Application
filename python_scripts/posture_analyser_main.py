@@ -51,6 +51,9 @@ boxDistDiff = [0.0] * personCount
 normalZoneModel = torch.load('python_scripts/model_training/models/normal_zone_model.pth')
 dangerZoneModel = torch.load('python_scripts/model_training/models/danger_zone_model.pth')
 
+# suppress wanning from SSL verification
+requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
+
 # retieve entries of danger zone coordinates according to the cameraId specified in CLI argument
 response = requests.get("https://localhost:5001/DangerZoneCoordinates/" + str(args[1]), verify=False)
 # interprete using json format
@@ -70,9 +73,6 @@ for row in data:
 dangerZonePolygon = [Polygon(dangerZone[i]) for i in range(len(dangerZone))]
 # threshold of intersection ratio
 intersectionThreshold = 0.8
-
-# suppress wanning from SSL verification
-requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
 
 def multiPersonPostureRecognition(outputs, frame):
     # STEP 1: Detect each person on frame (frame) #
@@ -249,7 +249,7 @@ def instance(source):
 
     # if video stream ended
     if not success:
-        print('End of video stream...')
+        print('End of video stream from camera %s...'%args[1])
         sys.exit()
 
     # convert coordinates (pts) of all danger zone to int32 format
