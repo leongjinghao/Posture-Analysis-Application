@@ -1,0 +1,98 @@
+@import '~antd/es/style/themes/default.less';
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+.colorWeak {
+  filter: invert(80%);
+}
+
+.ant-layout {
+  min-height: 100vh;
+  
+}
+.ant-pro-global-header-layout-mix {
+  background-color: #fff;
+  }
+.ant-btn-primary{
+  color: #fff;
+  border-color: #62c2d3;
+  background: #62c2d3;
+}
+.ant-pro-sider.ant-layout-sider.ant-pro-sider-fixed {
+  left: unset;
+}
+.ant-pro-global-header-layout-mix .anticon {
+  color: #000;
+  }
+  
+canvas {
+  display: block;
+}
+
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+@media (max-width: @screen-xs) {
+  .ant-table {
+    width: 100%;
+    overflow-x: auto;
+    &-thead > tr,
+    &-tbody > tr {
+      > th,
+      > td {
+        white-space: pre;
+        > span {
+          display: block;
+        }
+      }
+    }
+  }
+}
+.btn-dark {
+  color: #fff;
+  background-color: #62c2d3;
+} 
+
+.btn-dark:hover {
+  color: #fff;
+  background-color: #80b7ff;
+} 
+
+.btn-darker {
+  color: #fff;
+  background-color: #187196;
+} 
+
+.btn-darker:hover {
+  color: #fff;
+  background-color: #5491ab;
+}
+
+.btn-outline-cp {
+  color: #62C2D3;
+  background-color: #fff;
+  border-color: #62C2D3;
+} 
+.btn-outline-cp:hover {
+  color: #26a9e0;
+  background-color: #fff;
+  border-color: #26a9e0;
+} 
+// Compatible with IE11
+@media screen and(-ms-high-contrast: active), (-ms-high-contrast: none) {
+  body .ant-design-pro > .ant-layout {
+    min-height: 100vh;
+  }
+}
