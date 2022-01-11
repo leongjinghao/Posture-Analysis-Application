@@ -10,7 +10,7 @@ using PostureLogApi.Data;
 namespace PostureLogApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220108075606_InitialMigration")]
+    [Migration("20220111094839_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,6 +28,9 @@ namespace PostureLogApi.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<int>("CameraId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Classification")
                         .HasColumnType("text");
 
@@ -35,6 +38,9 @@ namespace PostureLogApi.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("PostureLandmarks")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Zone")
                         .HasColumnType("text");
 
                     b.HasKey("Id");

@@ -26,6 +26,9 @@ namespace PostureLogApi.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<int>("CameraId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Classification")
                         .HasColumnType("text");
 
@@ -33,6 +36,9 @@ namespace PostureLogApi.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("PostureLandmarks")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Zone")
                         .HasColumnType("text");
 
                     b.HasKey("Id");

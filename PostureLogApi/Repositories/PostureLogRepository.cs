@@ -47,6 +47,8 @@ namespace PostureLogApi.Repositories
             if (itemToUpdate == null)
                 throw new NullReferenceException();
 
+            itemToUpdate.CameraId = postureLog.CameraId;
+            itemToUpdate.Zone = postureLog.Zone;
             itemToUpdate.PostureLandmarks = postureLog.PostureLandmarks;
             itemToUpdate.Classification = postureLog.Classification;
             await _context.SaveChangesAsync();

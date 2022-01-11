@@ -41,6 +41,8 @@ namespace PostureLogApi.Controllers
         {
             var postureLog = new PostureLog
             {
+              CameraId = createPostureLogDto.CameraId,
+              Zone = createPostureLogDto.Zone,
               PostureLandmarks = createPostureLogDto.PostureLandmarks,
               Classification  = createPostureLogDto.Classification,
               DateTime = DateTime.Now
@@ -63,6 +65,8 @@ namespace PostureLogApi.Controllers
             var postureLog = new PostureLog
             {
               Id = id,
+              CameraId = updatePostureLogDto.CameraId,
+              Zone = updatePostureLogDto.Zone,
               PostureLandmarks = updatePostureLogDto.PostureLandmarks,
               Classification  = updatePostureLogDto.Classification,
               DateTime = DateTime.Now
