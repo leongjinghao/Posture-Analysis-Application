@@ -63,7 +63,7 @@ export default defineConfig({
         },
       ],
     },
-    
+
     {
       name: 'Home',
       icon: 'table',
@@ -74,9 +74,20 @@ export default defineConfig({
       path: '/Home',
       redirect: '/Home',
     },
-    
+
     {
-      
+      name: 'AI Camera - Posture',
+      icon: 'table',
+      path: '/Posture',
+      component: './Posture',
+    },
+    {
+      path: '/Posture',
+      redirect: '/Posture',
+    },
+
+    {
+
       path: '/account',
       routes: [
         {
