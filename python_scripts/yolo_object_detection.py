@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import time
 
-cap = cv2.VideoCapture('video_sample/exercise.mp4')
+cap = cv2.VideoCapture('python_scripts/video_sample/exercise.mp4')
 whT = 320
 confThreshold = 0.5
 nmsThreshold = 0.3
@@ -11,11 +11,11 @@ tFps = 0.0
 tFrame = 0
 
 classNames = []
-with open('YOLO_config/coco.names', 'rt') as f:
+with open('python_scripts/YOLO_config/coco.names', 'rt') as f:
     classNames = f.read().rstrip('\n').split('\n')
 
-modelConfiguration = 'YOLO_config/yolov4-tiny.cfg'
-modelWeights = 'YOLO_config/yolov4-tiny.weights'
+modelConfiguration = 'python_scripts/YOLO_config/yolov4-tiny.cfg'
+modelWeights = 'python_scripts/YOLO_config/yolov4-tiny.weights'
 
 net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeights)
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)

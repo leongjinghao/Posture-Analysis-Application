@@ -7,7 +7,7 @@ mpPose = mp.solutions.pose
 pose = mpPose.Pose(min_detection_confidence=0.5)
 mpDraw = mp.solutions.drawing_utils
 
-cap = cv2.VideoCapture('video_sample/goodposture.mp4')
+cap = cv2.VideoCapture('python_scripts/video_sample/dancing3.mp4')
 pTime = 0
 writeLM = False
 # 1 = bad posture data, 0 = good posture data
@@ -15,7 +15,7 @@ posClass = 0
 
 if writeLM:
     # overwrite previous landmark data
-    open('model_training/posture_log_file/landmark_data_normalzone.txt', 'w')
+    open('python_scripts/model_training/posture_log_file/landmark_data_normalzone.txt', 'w')
 
 while True:
     success, frame = cap.read()
@@ -48,7 +48,7 @@ while True:
                     delimiter = ', '
                 else:
                     delimiter = ', {0}\n'.format(posClass)
-                with open('model_training/posture_log_file/landmark_data_normalzone.txt', 'a') as f:
+                with open('python_scripts/model_training/posture_log_file/landmark_data_normalzone.txt', 'a') as f:
                     f.write("{0}, {1}{2}".format(lm.x, lm.y, delimiter))
 
     # show FPS

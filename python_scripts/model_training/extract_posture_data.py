@@ -4,7 +4,7 @@ import mediapipe as mp
 import time
 
 cap = cv2.VideoCapture('../video_sample/badposture_dangerzone.mp4')
-logFilePath = 'posture_log_file/landmark_data_normalzone.txt'
+logFilePath = 'python_scripts/model_training/posture_log_file/landmark_data_normalzone.txt'
 # 1 = bad posture data, 0 = good posture data
 posClass = 0
 whT = 320
@@ -13,11 +13,11 @@ nmsThreshold = 0.3
 pTime = 0
 
 classNames = []
-with open('../YOLO_config/coco.names', 'rt') as f:
+with open('python_scripts/YOLO_config/coco.names', 'rt') as f:
     classNames = f.read().rstrip('\n').split('\n')
 
-modelConfiguration = '../YOLO_config/yolov4-tiny.cfg'
-modelWeights = '../YOLO_config/yolov4-tiny.weights'
+modelConfiguration = 'python_scripts/YOLO_config/yolov4-tiny.cfg'
+modelWeights = 'python_scripts/YOLO_config/yolov4-tiny.weights'
 
 net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeights)
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)

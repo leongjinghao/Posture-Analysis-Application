@@ -1,14 +1,21 @@
+import ast
 import sys
 import cv2
 import numpy as np
 import mediapipe as mp
 import time
 import torch
+import requests
 from model_training.train_model import predict, MLP
 from shapely.geometry import Polygon
+from urllib3.exceptions import InsecureRequestWarning
+
+# CLI argument(s)
+args = sys.argv[1:]
 
 # video stream source
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(args[0])
+
 # confidence threshold for person detection
 confThreshold = 0.5
 # score threshold for bounding box suppression
@@ -18,12 +25,12 @@ pTime = 0
 
 # coco class name
 classNames = []
-with open('YOLO_config/coco.names', 'rt') as f:
+with open('python_scripts/YOLO_config/coco.names', 'rt') as f:
     classNames = f.read().rstrip('\n').split('\n')
 
 # YOLO model configurations
-modelConfiguration = 'YOLO_config/yolov4-tiny.cfg'
-modelWeights = 'YOLO_config/yolov4-tiny.weights'
+modelConfiguration = 'python_scripts/YOLO_config/yolov4-tiny.cfg'
+modelWeights = 'python_scripts/YOLO_config/yolov4-tiny.weights'
 
 net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeights)
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
@@ -41,19 +48,34 @@ poseEstimatorInUse = []
 boxDistDiff = [0.0] * personCount
 
 # load model
-normalZoneModel = torch.load('model_training/models/normal_zone_model.pth')
-dangerZoneModel = torch.load('model_training/models/danger_zone_model.pth')
+normalZoneModel = torch.load('python_scripts/model_training/models/normal_zone_model.pth')
+dangerZoneModel = torch.load('python_scripts/model_training/models/danger_zone_model.pth')
 
-# coordinates of danger zones
-dangerZone = [
-              # [[20, 60], [150, 120], [150, 360], [20, 420]],
-               [[620, 60], [490, 120], [490, 360], [620, 420]],
-              [[240, 50], [400, 50], [400, 450], [240, 450]]]
+# suppress wanning from SSL verification
+requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
+
+# retieve entries of danger zone coordinates according to the cameraId specified in CLI argument
+response = requests.get("https://localhost:5001/DangerZoneCoordinates/" + str(args[1]), verify=False)
+# interprete using json format
+data = response.json()
+# list to store all the danger zone coordinates for the cameraId specified
+dangerZone = []
+# append entries of danger zone coordinates retrieved into the list
+for row in data:
+    dangerZone.append(ast.literal_eval("[" + row["coordinates"] + "]"))
+
+# dangerZone = [
+#               # [[20, 60], [150, 120], [150, 360], [20, 420]],
+#                [[620, 60], [490, 120], [490, 360], [620, 420]],
+#               [[240, 50], [400, 50], [400, 450], [240, 450]]]
+
 # create a polygon for each danger zone
 dangerZonePolygon = [Polygon(dangerZone[i]) for i in range(len(dangerZone))]
 # threshold of intersection ratio
 intersectionThreshold = 0.8
 
+personPostureState = [None] * personCount
+framesArray = [[]] * personCount
 
 def multiPersonPostureRecognition(outputs, frame):
     # STEP 1: Detect each person on frame (frame) #
@@ -162,22 +184,149 @@ def multiPersonPostureRecognition(outputs, frame):
         if intersectFlag is True:
             # if bad posture detected
             if predict(postureLm, dangerZoneModel).round() == float(1):
+                
                 # bounding box colour is purple
                 bboxColour = (255, 0, 255)
+                
+                # log bad posture detected in database through post request
+                requests.post(
+                    url = "https://localhost:5001/PostureLog", 
+                    json = {'cameraId': int(args[1]),
+                            'zone': 'danger',
+                            'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
+                            'classification': 'bad'},
+                    verify = False)
+
+                # if the person was performing good posture previously, 
+                # consolidate and save the good posture frames of the person into a video
+                # note: poseObjIdx can be mapped to a person
+                if personPostureState[poseObjIdx] != "bad":
+                    if len(framesArray[poseObjIdx]) != 0:
+                        out = cv2.VideoWriter('good_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
+                        
+                        for k in range(len(framesArray[poseObjIdx])):
+                            out.write(framesArray[poseObjIdx][k])
+                        
+                        out.release()
+                    
+                    # set person's posture state
+                    personPostureState[poseObjIdx] = "bad"
+                    
+                    framesArray[poseObjIdx] = [frame]
+                # else the person was performing bad posture previously,
+                # append bad posture frame to the framesArray
+                else:
+                    framesArray[poseObjIdx].append(frame)
+                        
             # else, it is a good posture
             else:
                 # bounding box colour is cyan
                 bboxColour = (255, 255, 0)
+                
+                # log good posture detected in database through post request
+                requests.post(
+                    url = "https://localhost:5001/PostureLog", 
+                    json = {'cameraId': int(args[1]),
+                            'zone': 'danger',
+                            'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
+                            'classification': 'good'},
+                    verify = False)
+                
+                # if the person was performing bad posture previously, 
+                # consolidate and save the bad posture frames of the person into a video
+                # note: poseObjIdx can be mapped to a person
+                if personPostureState[poseObjIdx] != "good":
+                    if len(framesArray[poseObjIdx]) != 0:
+                        out = cv2.VideoWriter('bad_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
+                        
+                        for k in range(len(framesArray[poseObjIdx])):
+                            out.write(framesArray[poseObjIdx][k])
+                        
+                        out.release()
+                    
+                    # set person's posture state
+                    personPostureState[poseObjIdx] = "good"
+
+                    framesArray[poseObjIdx] = [frame]
+
+                # else the person was performing good posture previously,
+                # append good posture frame to the framesArray
+                else:
+                    framesArray[poseObjIdx].append(frame)
+
         # else person is not in any danger zone
         else:
             # if bad posture detected
             if predict(postureLm, normalZoneModel).round() == float(1):
                 # bounding box colour is red
                 bboxColour = (0, 0, 255)
+                
+                # log bad posture detected in database through post request
+                requests.post(
+                    url = "https://localhost:5001/PostureLog", 
+                    json = {'cameraId': int(args[1]),
+                            'zone': 'normal',
+                            'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
+                            'classification': 'bad'},
+                    verify = False)
+                
+                # if the person was performing good posture previously, 
+                # consolidate and save the good posture frames of the person into a video
+                # note: poseObjIdx can be mapped to a person
+                if personPostureState[poseObjIdx] != "bad":
+                    if len(framesArray[poseObjIdx]) != 0:
+                        out = cv2.VideoWriter('good_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
+                        
+                        for k in range(len(framesArray[poseObjIdx])):
+                            out.write(framesArray[poseObjIdx][k])
+
+                        out.release()
+                    
+                    # set person's posture state
+                    personPostureState[poseObjIdx] = "bad"
+                    
+                    framesArray[poseObjIdx] = [frame]
+
+                # else the person was performing bad posture previously,
+                # append bad posture frame to the framesArray
+                else:
+                    framesArray[poseObjIdx].append(frame)
+            
             # else, it is a good posture
             else:
                 # bounding box colour is green
                 bboxColour = (0, 255, 0)
+                
+                # log good posture detected in database through post request
+                requests.post(
+                    url = "https://localhost:5001/PostureLog", 
+                    json = {'cameraId': int(args[1]),
+                            'zone': 'normal',
+                            'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
+                            'classification': 'good'},
+                    verify = False)
+
+                # if the person was performing bad posture previously, 
+                # consolidate and save the bad posture frames of the person into a video
+                # note: poseObjIdx can be mapped to a person
+                if personPostureState[poseObjIdx] != "good":
+                    if len(framesArray[poseObjIdx]) != 0:
+                        out = cv2.VideoWriter('bad_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
+                        
+                        for k in range(len(framesArray[poseObjIdx])):
+                            out.write(framesArray[poseObjIdx][k])
+                        
+                        out.release()
+                    
+                    # set person's posture state
+                    personPostureState[poseObjIdx] = "good"
+
+                    framesArray[poseObjIdx] = [frame]
+
+                # else the person was performing good posture previously,
+                # append good posture frame to the framesArray
+                else:
+                    framesArray[poseObjIdx].append(frame)
 
         # display bounding box
         cv2.rectangle(frame, (x, y), (x + w, y + h), bboxColour, 2)
@@ -187,14 +336,15 @@ def multiPersonPostureRecognition(outputs, frame):
                     f'{classNames[classIds[i]].upper()} {int(confs[i] * 100)}% {str("estimator ID ") + str(poseObjIdx)}',
                     (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
 
-def main():
+def instance(source):    
     global pTime
     global poseEstimatorInUse
+    
     success, frame = cap.read()
 
     # if video stream ended
     if not success:
-        print('End of video stream...')
+        print('End of video stream from camera %s...'%args[1])
         sys.exit()
 
     # convert coordinates (pts) of all danger zone to int32 format
@@ -236,4 +386,4 @@ def main():
 
 if __name__ == "__main__":
     while True:
-        main()
+        instance(cap)
