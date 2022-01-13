@@ -1,4 +1,4 @@
-# .net5 obj folder
+# .net5 obj and bin folder
 DangerZoneCoordinatesApi/obj
 DangerZoneCoordinatesApi/bin
 PostureLogApi/obj
