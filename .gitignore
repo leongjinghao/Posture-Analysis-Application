@@ -1,15 +1,5 @@
-# Python Files
-*.pyc
-# landmark data
-model_training/posture_log_file/landmark_data_normalzone.txt
-model_training/posture_log_file/landmark_data_dangerzone.txt
-# pycharm files
-.idea
-# YOLO model .cfg & .weights files
-*.cfg
-*.weights
-# opencv source file, new build and install folder
-opencv/opencv-4.5.4
-opencv/opencv_contrib-4.5.4
-opencv/build
-opencv/install
+# .net5 obj and bin folder
+DangerZoneCoordinatesApi/obj
+DangerZoneCoordinatesApi/bin
+PostureLogApi/obj
+PostureLogApi/bin
