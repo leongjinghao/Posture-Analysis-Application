@@ -64,11 +64,6 @@ dangerZone = []
 for row in data:
     dangerZone.append(ast.literal_eval("[" + row["coordinates"] + "]"))
 
-# dangerZone = [
-#               # [[20, 60], [150, 120], [150, 360], [20, 420]],
-#                [[620, 60], [490, 120], [490, 360], [620, 420]],
-#               [[240, 50], [400, 50], [400, 450], [240, 450]]]
-
 # create a polygon for each danger zone
 dangerZonePolygon = [Polygon(dangerZone[i]) for i in range(len(dangerZone))]
 # threshold of intersection ratio
@@ -121,7 +116,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 boxDistDiff[j] = float("inf")
             # else calculate the difference in distance for the center point for each posture estimator object
             else:
-                boxDistDiff[j] = abs(poseEstimatorDim[j][0] - ctr_pt[0]) + abs(poseEstimatorDim[j][1] - ctr_pt[1])
+                boxDistDiff[j] = pow(poseEstimatorDim[j][0] - ctr_pt[0], 2) + pow(poseEstimatorDim[j][1] - ctr_pt[1], 2)
 
         # retrieve the index of posture estimator that was used for the person detected previously
         # by selecting the least distance difference
