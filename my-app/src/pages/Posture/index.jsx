@@ -1,14 +1,39 @@
 import React, { useRef } from 'react';
 import ProCard from '@ant-design/pro-card';
 
+function DisplayVideo(props) {
+  return (
+    <div className='Video_Container'>
+      <video width="326.4" height='326.4' controls>
+        <source src='/video_sample/boxing.mp4' type='video/mp4' />
+      </video>
+    </div>
+  )
+}
+
 export default () => {
   return (
-    <>
-      <ProCard style={{ marginTop: 8 }} gutter={[16, 16]} wrap title="List of Videos" >
-        <video width="auto" height="auto" controls>
-          <source src='/video_sample/boxing.mp4' type='video/mp4'/>
-        </video>
-      </ProCard>
-    </>
+    <div className='Video_Container'>
+      <DisplayVideo/>
+      <video width="auto" height='326.4' controls>
+        <source src='/video_sample/boxing2.mp4' type='video/mp4' />
+      </video>
+      <video width="auto" height='326.4' controls>
+        <source src='/video_sample/cycling.mp4' type='video/mp4' />
+      </video>
+      <video width="auto" height='326.4' controls>
+        <source src='/video_sample/dancing.mp4' type='video/mp4' />
+      </video>
+    </div>
+    // <>
+    //   <ProCard style={{ marginTop: 8 }} gutter={[16, 16]} wrap title="List of Videos" >
+    //     <video width="auto" height='326.4' controls>
+    //       <source src='/video_sample/boxing.mp4' type='video/mp4'/>
+    //     </video>
+    //     <video width="auto" height="326.4" controls>
+    //       <source src='/video_sample/boxing2.mp4' type='video/mp4'/>
+    //     </video>
+    //   </ProCard>
+    // </>
   );
 };
