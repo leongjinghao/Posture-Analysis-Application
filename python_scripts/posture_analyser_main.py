@@ -190,7 +190,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 
                 # log bad posture detected in database through post request
                 requests.post(
-                    url = "https://localhost:5001/PostureLog", 
+                    url = "https://localhost:5000/PostureLog", 
                     json = {'cameraId': int(args[1]),
                             'zone': 'danger',
                             'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
@@ -202,7 +202,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 # note: poseObjIdx can be mapped to a person
                 if personPostureState[poseObjIdx] != "bad":
                     if len(framesArray[poseObjIdx]) != 0:
-                        out = cv2.VideoWriter('my-app\public\video_sample\good_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
+                        out = cv2.VideoWriter('my-app\public\\video_sample\good_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
                         
                         for k in range(len(framesArray[poseObjIdx])):
                             out.write(framesArray[poseObjIdx][k])
@@ -225,7 +225,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 
                 # log good posture detected in database through post request
                 requests.post(
-                    url = "https://localhost:5001/PostureLog", 
+                    url = "https://localhost:5000/PostureLog", 
                     json = {'cameraId': int(args[1]),
                             'zone': 'danger',
                             'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
@@ -237,7 +237,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 # note: poseObjIdx can be mapped to a person
                 if personPostureState[poseObjIdx] != "good":
                     if len(framesArray[poseObjIdx]) != 0:
-                        out = cv2.VideoWriter('my-app\public\video_sample\bad_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
+                        out = cv2.VideoWriter('my-app\public\\video_sample\\bad_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
                         
                         for k in range(len(framesArray[poseObjIdx])):
                             out.write(framesArray[poseObjIdx][k])
@@ -263,7 +263,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 
                 # log bad posture detected in database through post request
                 requests.post(
-                    url = "https://localhost:5001/PostureLog", 
+                    url = "https://localhost:5000/PostureLog", 
                     json = {'cameraId': int(args[1]),
                             'zone': 'normal',
                             'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
@@ -275,7 +275,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 # note: poseObjIdx can be mapped to a person
                 if personPostureState[poseObjIdx] != "bad":
                     if len(framesArray[poseObjIdx]) != 0:
-                        out = cv2.VideoWriter('my-app\public\video_sample\good_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
+                        out = cv2.VideoWriter('my-app\public\\video_sample\good_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
                         
                         for k in range(len(framesArray[poseObjIdx])):
                             out.write(framesArray[poseObjIdx][k])
@@ -299,7 +299,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 
                 # log good posture detected in database through post request
                 requests.post(
-                    url = "https://localhost:5001/PostureLog", 
+                    url = "https://localhost:5000/PostureLog", 
                     json = {'cameraId': int(args[1]),
                             'zone': 'normal',
                             'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
@@ -311,7 +311,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 # note: poseObjIdx can be mapped to a person
                 if personPostureState[poseObjIdx] != "good":
                     if len(framesArray[poseObjIdx]) != 0:
-                        out = cv2.VideoWriter('my-app\public\video_sample\bad_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
+                        out = cv2.VideoWriter('my-app\public\\video_sample\\bad_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
                         
                         for k in range(len(framesArray[poseObjIdx])):
                             out.write(framesArray[poseObjIdx][k])
