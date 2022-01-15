@@ -202,7 +202,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 # note: poseObjIdx can be mapped to a person
                 if personPostureState[poseObjIdx] != "bad":
                     if len(framesArray[poseObjIdx]) != 0:
-                        out = cv2.VideoWriter('good_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
+                        out = cv2.VideoWriter('my-app\public\video_sample\good_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
                         
                         for k in range(len(framesArray[poseObjIdx])):
                             out.write(framesArray[poseObjIdx][k])
@@ -237,7 +237,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 # note: poseObjIdx can be mapped to a person
                 if personPostureState[poseObjIdx] != "good":
                     if len(framesArray[poseObjIdx]) != 0:
-                        out = cv2.VideoWriter('bad_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
+                        out = cv2.VideoWriter('my-app\public\video_sample\bad_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
                         
                         for k in range(len(framesArray[poseObjIdx])):
                             out.write(framesArray[poseObjIdx][k])
@@ -275,7 +275,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 # note: poseObjIdx can be mapped to a person
                 if personPostureState[poseObjIdx] != "bad":
                     if len(framesArray[poseObjIdx]) != 0:
-                        out = cv2.VideoWriter('good_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
+                        out = cv2.VideoWriter('my-app\public\video_sample\good_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
                         
                         for k in range(len(framesArray[poseObjIdx])):
                             out.write(framesArray[poseObjIdx][k])
@@ -311,7 +311,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 # note: poseObjIdx can be mapped to a person
                 if personPostureState[poseObjIdx] != "good":
                     if len(framesArray[poseObjIdx]) != 0:
-                        out = cv2.VideoWriter('bad_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
+                        out = cv2.VideoWriter('my-app\public\video_sample\bad_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
                         
                         for k in range(len(framesArray[poseObjIdx])):
                             out.write(framesArray[poseObjIdx][k])
