@@ -185,7 +185,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 
                 # log bad posture detected in database through post request
                 requests.post(
-                    url = "https://localhost:5000/PostureLog", 
+                    url = "https://localhost:5001/PostureLog", 
                     json = {'cameraId': int(args[1]),
                             'zone': 'danger',
                             'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
@@ -220,7 +220,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 
                 # log good posture detected in database through post request
                 requests.post(
-                    url = "https://localhost:5000/PostureLog", 
+                    url = "https://localhost:5001/PostureLog", 
                     json = {'cameraId': int(args[1]),
                             'zone': 'danger',
                             'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
@@ -258,7 +258,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 
                 # log bad posture detected in database through post request
                 requests.post(
-                    url = "https://localhost:5000/PostureLog", 
+                    url = "https://localhost:5001/PostureLog", 
                     json = {'cameraId': int(args[1]),
                             'zone': 'normal',
                             'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
@@ -294,7 +294,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 
                 # log good posture detected in database through post request
                 requests.post(
-                    url = "https://localhost:5000/PostureLog", 
+                    url = "https://localhost:5001/PostureLog", 
                     json = {'cameraId': int(args[1]),
                             'zone': 'normal',
                             'postureLandmarks': ",".join([str(lm) for lm in postureLm]),
