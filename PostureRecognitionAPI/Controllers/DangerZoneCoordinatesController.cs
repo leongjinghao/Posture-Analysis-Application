@@ -28,27 +28,7 @@ namespace PostureRecognitionAPI.Controllers
 
             return Ok(dangerZoneCoordinates);
         }
-
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<DangerZoneCoordinates>>> GetDangerZoneCoordinates()
-        {
-            var dangerZoneCoordinates = await _dangerZoneCoordinatesRepository.GetAll();
-            return Ok(dangerZoneCoordinates);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> CreateDangerZoneCoordinates(CreateDangerZoneCoordinatesDto createDangerZoneCoordinatesDto)
-        {
-            var dangerZoneCoordinates = new DangerZoneCoordinates
-            {
-              CameraId = createDangerZoneCoordinatesDto.CameraId,
-              Coordinates  = createDangerZoneCoordinatesDto.Coordinates
-            };
-
-            await _dangerZoneCoordinatesRepository.Add(dangerZoneCoordinates);
-            return Ok();
-        }
-
+        
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteDangerZoneCoordinates(int id)
         {
@@ -67,6 +47,26 @@ namespace PostureRecognitionAPI.Controllers
             };
 
             await _dangerZoneCoordinatesRepository.Update(dangerZoneCoordinates);
+            return Ok();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<DangerZoneCoordinates>>> GetDangerZoneCoordinates()
+        {
+            var dangerZoneCoordinates = await _dangerZoneCoordinatesRepository.GetAll();
+            return Ok(dangerZoneCoordinates);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateDangerZoneCoordinates(CreateDangerZoneCoordinatesDto createDangerZoneCoordinatesDto)
+        {
+            var dangerZoneCoordinates = new DangerZoneCoordinates
+            {
+              CameraId = createDangerZoneCoordinatesDto.CameraId,
+              Coordinates  = createDangerZoneCoordinatesDto.Coordinates
+            };
+
+            await _dangerZoneCoordinatesRepository.Add(dangerZoneCoordinates);
             return Ok();
         }
     }
