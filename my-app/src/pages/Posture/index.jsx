@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import ProCard from '@ant-design/pro-card';
+import './videoStyle.css'
+
+const videolink = 'http://localhost:8000/video_sample/boxing.mp4'
 
 const Video = (props) => {
   return (
-    <section>
-      <video width="auto" height='326.4' controls>
-        <source src={props.url} type='video/mp4' />
+      <video className='AI_Videos'preload='metadata' controls>
+        <source src={videolink} type='video/mp4' />
       </video>
-    </section>
   )
 }
 
@@ -17,9 +18,7 @@ const VideoContainer = props => {
       return <Video url={video.url} />;
     });
   };
-  return (
-    <><section>{displayVideos()}</section></>
-  )
+  return (<><section>{displayVideos()}</section></>)
 }
 
 class PostureApp extends Component {
@@ -30,10 +29,10 @@ class PostureApp extends Component {
     };
   }
   componentDidMount() {
-    fetch("https://api.thedogapi.com/v1/images/search?limit=4")
+    fetch("https://api.thedogapi.com/v1/images/search?limit=12")
       .then(response => {
         if (!response.ok) {
-          throw Error("Error fetching the cute doggies");
+          throw Error("Error fetching the posture videos");
         }
         return response.json()
           .then(allData => {
@@ -46,24 +45,13 @@ class PostureApp extends Component {
   }
   render() {
     return (
-      <section className='List of Videos'>
-        <p>List of Videos</p>
-        <div className='Video_Container'>
-      <VideoContainer videos={this.state.videos} />
-    </div>
-      </section>
+      <>
+        <ProCard style={{ marginTop: 8 }} gutter={[16, 16]} wrap title="List of Videos" >
+          <VideoContainer videos={this.state.videos} />
+        </ProCard >
+      </>
     )
   }
 }
 
 export default PostureApp
-    // <>
-    //   <ProCard style={{ marginTop: 8 }} gutter={[16, 16]} wrap title="List of Videos" >
-    //     <video width="auto" height='326.4' controls>
-    //       <source src='/video_sample/boxing.mp4' type='video/mp4'/>
-    //     </video>
-    //     <video width="auto" height="326.4" controls>
-    //       <source src='/video_sample/boxing2.mp4' type='video/mp4'/>
-    //     </video>
-    //   </ProCard>
-    // </>
