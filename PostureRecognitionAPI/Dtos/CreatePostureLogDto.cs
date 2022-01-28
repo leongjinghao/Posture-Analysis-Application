@@ -2,9 +2,9 @@ namespace PostureRecognitionAPI.Dtos
 {
     public class CreatePostureLogDto
     {
-        public int CameraId { get; set; }
-        public string Zone { get; set; }
-        public string PostureLandmarks { get; set; }
-        public string Classification { get; set; }
+        public int cameraId { get; set; }
+        public string zone { get; set; }
+        public string postureLandmarks { get; set; }
+        public string classification { get; set; }
     }
 }

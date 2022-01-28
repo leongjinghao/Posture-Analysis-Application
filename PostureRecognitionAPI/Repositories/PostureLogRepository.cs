@@ -43,14 +43,14 @@ namespace PostureRecognitionAPI.Repositories
 
         public async Task Update(PostureLog postureLog)
         {
-            var itemToUpdate = await _context.PostureLogs.FindAsync(postureLog.Id);
+            var itemToUpdate = await _context.PostureLogs.FindAsync(postureLog.id);
             if (itemToUpdate == null)
                 throw new NullReferenceException();
 
-            itemToUpdate.CameraId = postureLog.CameraId;
-            itemToUpdate.Zone = postureLog.Zone;
-            itemToUpdate.PostureLandmarks = postureLog.PostureLandmarks;
-            itemToUpdate.Classification = postureLog.Classification;
+            itemToUpdate.cameraId = postureLog.cameraId;
+            itemToUpdate.zone = postureLog.zone;
+            itemToUpdate.postureLandmarks = postureLog.postureLandmarks;
+            itemToUpdate.classification = postureLog.classification;
             await _context.SaveChangesAsync();
         }
     }

@@ -12,31 +12,31 @@ namespace PostureRecognitionAPI.Migrations
                 name: "DangerZoneCoordinates",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CameraId = table.Column<int>(type: "integer", nullable: false),
-                    Coordinates = table.Column<string>(type: "text", nullable: true)
+                    cameraId = table.Column<int>(type: "integer", nullable: false),
+                    coordinates = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DangerZoneCoordinates", x => x.Id);
+                    table.PrimaryKey("PK_DangerZoneCoordinates", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "PostureLogs",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    DateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CameraId = table.Column<int>(type: "integer", nullable: false),
-                    Zone = table.Column<string>(type: "text", nullable: true),
-                    PostureLandmarks = table.Column<string>(type: "text", nullable: true),
-                    Classification = table.Column<string>(type: "text", nullable: true)
+                    dateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    cameraId = table.Column<int>(type: "integer", nullable: false),
+                    zone = table.Column<string>(type: "text", nullable: true),
+                    postureLandmarks = table.Column<string>(type: "text", nullable: true),
+                    classification = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PostureLogs", x => x.Id);
+                    table.PrimaryKey("PK_PostureLogs", x => x.id);
                 });
         }
 

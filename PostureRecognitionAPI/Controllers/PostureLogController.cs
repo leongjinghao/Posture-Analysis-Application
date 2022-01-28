@@ -41,11 +41,11 @@ namespace PostureRecognitionAPI.Controllers
         {
             var postureLog = new PostureLog
             {
-              CameraId = createPostureLogDto.CameraId,
-              Zone = createPostureLogDto.Zone,
-              PostureLandmarks = createPostureLogDto.PostureLandmarks,
-              Classification  = createPostureLogDto.Classification,
-              DateTime = DateTime.Now
+              cameraId = createPostureLogDto.cameraId,
+              zone = createPostureLogDto.zone,
+              postureLandmarks = createPostureLogDto.postureLandmarks,
+              classification  = createPostureLogDto.classification,
+              dateTime = DateTime.Now
             };
 
             await _postureLogRepository.Add(postureLog);
@@ -64,12 +64,12 @@ namespace PostureRecognitionAPI.Controllers
         {
             var postureLog = new PostureLog
             {
-              Id = id,
-              CameraId = updatePostureLogDto.CameraId,
-              Zone = updatePostureLogDto.Zone,
-              PostureLandmarks = updatePostureLogDto.PostureLandmarks,
-              Classification  = updatePostureLogDto.Classification,
-              DateTime = DateTime.Now
+              id = id,
+              cameraId = updatePostureLogDto.cameraId,
+              zone = updatePostureLogDto.zone,
+              postureLandmarks = updatePostureLogDto.postureLandmarks,
+              classification  = updatePostureLogDto.classification,
+              dateTime = DateTime.Now
             };
 
             await _postureLogRepository.Update(postureLog);

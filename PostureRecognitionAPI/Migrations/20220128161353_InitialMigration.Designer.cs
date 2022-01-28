@@ -10,7 +10,7 @@ using PostureRecognitionAPI.Data;
 namespace PostureRecognitionAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220118094043_InitialMigration")]
+    [Migration("20220128161353_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,45 +23,45 @@ namespace PostureRecognitionAPI.Migrations
 
             modelBuilder.Entity("PostureRecognitionAPI.Models.DangerZoneCoordinates", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("CameraId")
+                    b.Property<int>("cameraId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Coordinates")
+                    b.Property<string>("coordinates")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
                     b.ToTable("DangerZoneCoordinates");
                 });
 
             modelBuilder.Entity("PostureRecognitionAPI.Models.PostureLog", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("CameraId")
+                    b.Property<int>("cameraId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Classification")
+                    b.Property<string>("classification")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("DateTime")
+                    b.Property<DateTime>("dateTime")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("PostureLandmarks")
+                    b.Property<string>("postureLandmarks")
                         .HasColumnType("text");
 
-                    b.Property<string>("Zone")
+                    b.Property<string>("zone")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
                     b.ToTable("PostureLogs");
                 });
