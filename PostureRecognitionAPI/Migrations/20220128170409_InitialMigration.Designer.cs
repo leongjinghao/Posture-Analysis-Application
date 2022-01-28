@@ -10,7 +10,7 @@ using PostureRecognitionAPI.Data;
 namespace PostureRecognitionAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220128161353_InitialMigration")]
+    [Migration("20220128170409_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,6 +64,21 @@ namespace PostureRecognitionAPI.Migrations
                     b.HasKey("id");
 
                     b.ToTable("PostureLogs");
+                });
+
+            modelBuilder.Entity("PostureRecognitionAPI.Models.VideoPath", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("videoPath")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("VideoPaths");
                 });
 #pragma warning restore 612, 618
         }

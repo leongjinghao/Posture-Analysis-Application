@@ -63,6 +63,21 @@ namespace PostureRecognitionAPI.Migrations
 
                     b.ToTable("PostureLogs");
                 });
+
+            modelBuilder.Entity("PostureRecognitionAPI.Models.VideoPath", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("videoPath")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("VideoPaths");
+                });
 #pragma warning restore 612, 618
         }
     }

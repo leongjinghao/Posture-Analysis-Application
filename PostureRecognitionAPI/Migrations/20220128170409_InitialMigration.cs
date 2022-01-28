@@ -38,6 +38,19 @@ namespace PostureRecognitionAPI.Migrations
                 {
                     table.PrimaryKey("PK_PostureLogs", x => x.id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "VideoPaths",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    videoPath = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VideoPaths", x => x.id);
+                });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -47,6 +60,9 @@ namespace PostureRecognitionAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "PostureLogs");
+
+            migrationBuilder.DropTable(
+                name: "VideoPaths");
         }
     }
 }
