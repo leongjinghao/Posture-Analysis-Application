@@ -1,18 +1,16 @@
 .video-container {
-    float: left;;
-    width: 23%;
-    height: 25%;
-    margin-right: 2%;
+    float: left;
+    width: 24%;
+    height: auto;
+    margin-right: 1%;
 }
 
 .video-size {
     float: left;
-    width: 100%;
-    height: 100%;
+    width: auto;
+    height: 24vh;
 }
 
 .video-text {
-    float: left;
-    align-self:flex-end;
-    vertical-align:text-bottom;
+    padding-left: 2%;
 }

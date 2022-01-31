@@ -30,7 +30,7 @@ function VideoModal({ url, visible, loading, handleOk, handleCancel }) {
                     // Algorithm to delete video
                 ]}
             >
-                <video className='video-modal' preload='metadata' controls autoplay>
+                <video className='video-modal' preload='metadata' controls>
                     <source src={url + ".mp4"} />
                 </video>
             </Modal>
