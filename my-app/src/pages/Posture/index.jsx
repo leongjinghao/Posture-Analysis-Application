@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ProCard from '@ant-design/pro-card';
-import './videoStyle.css'
-import Modal from './Modal'
+import './videoStyle.css';
+import Modal from './Modal';
 
 //const videolink = 'http://localhost:8000/video_sample/boxing.mp4'
 const videolist = ['video_sample/boxing.mp4',
@@ -20,16 +20,19 @@ const videolist = ['video_sample/boxing.mp4',
 //   )
 // }
 
+function openModal() {
+  return <div>Modal</div>
+}
+
 const VideoContainer = props => {
   const displayVideos = () => {
     return videolist.map(video => {//props.videos.map(video => {
       return <div className='Video_Container'>
-        <video title="Title" className='AI_Videos' preload='metadata'>
+        <video className='AI_Videos' preload='metadata' onClick={openModal}>
           <source src={video} type='video/mp4' />
         </video>
         <p>Video #{video}</p>
       </div>;
-      //<Video url={video.url} />;
     });
   };
   return (<><div>{displayVideos()}</div></>)
@@ -39,11 +42,12 @@ class PostureApp extends Component {
   constructor() {
     super();
     this.state = {
-      videos: []
+      videos: [],
+      showModal: false
     };
   }
   componentDidMount() {
-    fetch("https://api.thedogapi.com/v1/images/search?limit=12")
+    fetch("https://api.thedogapi.com/v1/images/search?limit=1")
       .then(response => {
         if (!response.ok) {
           throw Error("Error fetching the posture videos");
@@ -63,8 +67,6 @@ class PostureApp extends Component {
         <ProCard style={{ marginTop: 8 }} gutter={[16, 16]} wrap title="List of Videos" >
           <VideoContainer videos={this.state.videos} />
         </ProCard >
-        <button>Show Modal</button>
-        <Modal />
       </>
     )
   }

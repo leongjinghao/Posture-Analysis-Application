@@ -1,24 +1,23 @@
-import './modal.css';
+import React from "react";
 
-const Modal = props => {
+function Modal() {
     return (
-        <div className='modal'>
-            <div className='modal-content'>
-                <div className='modal-header'>
-                    <h4 className='modal-title'>Modal title</h4>
+        <div className="modalBackground">
+            <div className="modalContainer">
+                <button> X </button>
+                <div className="title">
+                    <h1>Are You Sure you want to continue?</h1>
                 </div>
-                <div className='modal-body'>
-                    <video title="Title" className='AI_Videos' preload='metadata' controls>
-                        {/* Temporary */} 
-                        <source src="video_sample/video.mp4" type='video/mp4' />
-                    </video>
+                <div className="body">
+                    <p>The next page is awesome! Please work!</p>
                 </div>
-                <div className='modal-footer'>
-                    <button className='button'>Close</button>
+                <div className="footer">
+                    <button>Cancel</button>
+                    <button>Continue</button>
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
-export default Modal
+export default Modal;
