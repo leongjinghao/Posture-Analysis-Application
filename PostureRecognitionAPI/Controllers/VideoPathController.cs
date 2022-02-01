@@ -28,25 +28,6 @@ namespace PostureRecognitionAPI.Controllers
             return Ok(videoPath);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<VideoPath>>> GetVideoPaths()
-        {
-            var videoPaths = await _videoPathRepository.GetAll();
-            return Ok(videoPaths);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> CreateVideoPath(CreateVideoPathDto createVideoPathDto)
-        {
-            var videoPath = new VideoPath
-            {
-              videoPath = createVideoPathDto.videoPath
-            };
-
-            await _videoPathRepository.Add(videoPath);
-            return Ok();
-        }
-
         [HttpDelete("{videoName}")]
         public async Task<ActionResult> DeleteVideoPath(string videoName)
         {
@@ -67,6 +48,25 @@ namespace PostureRecognitionAPI.Controllers
             };
 
             await _videoPathRepository.Update(videoPath);
+            return Ok();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<VideoPath>>> GetVideoPaths()
+        {
+            var videoPaths = await _videoPathRepository.GetAll();
+            return Ok(videoPaths);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateVideoPath(CreateVideoPathDto createVideoPathDto)
+        {
+            var videoPath = new VideoPath
+            {
+              videoPath = createVideoPathDto.videoPath
+            };
+
+            await _videoPathRepository.Add(videoPath);
             return Ok();
         }
     }

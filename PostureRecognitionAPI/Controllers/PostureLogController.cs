@@ -29,29 +29,6 @@ namespace PostureRecognitionAPI.Controllers
             return Ok(postureLog);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<PostureLog>>> GetPostureLogs()
-        {
-            var postureLogs = await _postureLogRepository.GetAll();
-            return Ok(postureLogs);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> CreatePostureLog(CreatePostureLogDto createPostureLogDto)
-        {
-            var postureLog = new PostureLog
-            {
-              cameraId = createPostureLogDto.cameraId,
-              zone = createPostureLogDto.zone,
-              postureLandmarks = createPostureLogDto.postureLandmarks,
-              classification  = createPostureLogDto.classification,
-              dateTime = DateTime.Now
-            };
-
-            await _postureLogRepository.Add(postureLog);
-            return Ok();
-        }
-
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeletePostureLog(int id)
         {
@@ -75,5 +52,29 @@ namespace PostureRecognitionAPI.Controllers
             await _postureLogRepository.Update(postureLog);
             return Ok();
         }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<PostureLog>>> GetPostureLogs()
+        {
+            var postureLogs = await _postureLogRepository.GetAll();
+            return Ok(postureLogs);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreatePostureLog(CreatePostureLogDto createPostureLogDto)
+        {
+            var postureLog = new PostureLog
+            {
+              cameraId = createPostureLogDto.cameraId,
+              zone = createPostureLogDto.zone,
+              postureLandmarks = createPostureLogDto.postureLandmarks,
+              classification  = createPostureLogDto.classification,
+              dateTime = DateTime.Now
+            };
+
+            await _postureLogRepository.Add(postureLog);
+            return Ok();
+        }
+
     }
 }
