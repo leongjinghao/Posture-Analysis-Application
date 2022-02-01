@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PostureRecognitionAPI.Data;
@@ -21,9 +22,9 @@ namespace PostureRecognitionAPI.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task Delete(int id)
+        public async Task Delete(string videoName)
         {
-            var itemToDelete = await _context.VideoPaths.FindAsync(id);
+            var itemToDelete = await (_context.VideoPaths.Where(vp => vp.videoPath.Contains(videoName))).FirstAsync();
             if (itemToDelete == null)
                 throw new NullReferenceException();
             

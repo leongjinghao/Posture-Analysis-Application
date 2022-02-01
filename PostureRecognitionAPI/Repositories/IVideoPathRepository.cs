@@ -9,7 +9,7 @@ namespace PostureRecognitionAPI.Repositories
         Task<VideoPath> Get(int id);
         Task<IEnumerable<VideoPath>> GetAll();
         Task Add(VideoPath videoPath);
-        Task Delete(int id);
+        Task Delete(string videoName);
         Task Update(VideoPath videoPath);
     }
 }

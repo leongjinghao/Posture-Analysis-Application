@@ -47,10 +47,10 @@ namespace PostureRecognitionAPI.Controllers
             return Ok();
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteVideoPath(int id)
+        [HttpDelete("{videoName}")]
+        public async Task<ActionResult> DeleteVideoPath(string videoName)
         {
-            await _videoPathRepository.Delete(id);
+            await _videoPathRepository.Delete(videoName);
 
             //TODO: delete physical video recordings located in react public folder
 
