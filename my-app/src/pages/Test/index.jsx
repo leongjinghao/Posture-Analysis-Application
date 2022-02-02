@@ -33,7 +33,7 @@ class App extends Component {
                     <VideoContainer videos={this.state.videos} />
                 </ProCard.TabPane>
                 <ProCard.TabPane key=" tab2" tab="Live Feed">
-                    Content 2
+                    <img src="http://<server_address>/stream.mjpg" />
                 </ProCard.TabPane>
             </ProCard>
         )

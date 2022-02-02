@@ -78,7 +78,9 @@
     "react-helmet-async": "^1.0.4",
     "react-router": "^4.3.1",
     "umi": "^3.5.0",
-    "umi-serve": "^1.9.10"
+    "umi-serve": "^1.9.10",
+    "express": "^4.17.1",
+    "raspberry-pi-camera-native": "0.0.0"
   },
   "devDependencies": {
     "@ant-design/pro-cli": "^2.0.2",
