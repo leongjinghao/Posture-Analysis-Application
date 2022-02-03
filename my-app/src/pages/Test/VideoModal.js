@@ -1,41 +1,65 @@
 import React from 'react';
 import { Modal, Button } from 'antd';
-import './VideoModal.css';
 
-function VideoModal({ url, visible, loading, handleOk, handleCancel }) {
+class videoModal extends React.Component {
+  state = {
+    loading: false,
+    visible: false,
+  };
+
+  showModal = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+
+  handleOk = () => {
+    this.setState({ loading: true });
+    setTimeout(() => {
+      this.setState({ loading: false, visible: false });
+    }, 3000);
+  };
+
+  handleCancel = () => {
+    this.setState({ visible: false });
+  };
+
+  render() {
+    const { visible, loading } = this.state;
     return (
-        <>
-            <Modal
-                maskStyle={{opacity: 0.1}}
-                width={900}
-                bodyStyle={{ height: 400, textAlign: 'center'}}
-                visible={visible}
-                title={url}
-                onOk={handleOk}
-                onCancel={handleCancel}
-                footer={[
-                    <Button href={url + '.mp4'} download='file' type="primary" loading={loading} onClick={handleOk}>
-                        Export
-                    </Button>,
-                    // Algorithm to download video
-                    <Button
-                        key="link"
-                        href="https://google.com"
-                        type="primary"
-                        loading={loading}
-                        onClick={handleOk}
-                    >
-                        Delete
-                    </Button>,
-                    // Algorithm to delete video
-                ]}
+      <>
+        <Modal
+          visible={visible}
+          title="Title"
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+          footer={[
+            <Button key="back" onClick={this.handleCancel}>
+              Return
+            </Button>,
+            <Button key="submit" type="primary" loading={loading} onClick={this.handleOk}>
+              Submit
+            </Button>,
+            <Button
+              key="link"
+              href="https://google.com"
+              type="primary"
+              loading={loading}
+              onClick={this.handleOk}
             >
-                <video className='video-modal' preload='metadata' controls>
-                    <source src={url + ".mp4"} />
-                </video>
-            </Modal>
-        </>
-    )
+              Search on Google
+            </Button>,
+          ]}
+        >
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+        </Modal>
+      </>
+    );
+  }
 }
 
-export default VideoModal
+export default videoModal
