@@ -1,19 +1,12 @@
-.video-container {
-    width: 100%;
-    height: auto;
-}
-
-.video-size {
-    width: 90%;
-    height: 21vh;
-    object-fit: cover;
-}
-
-.video-text {
-    margin-left: 2%;
-}
-
-.video-modal {
-    height: 100%;
+.AI_Videos {
+    float: left;
     width: auto;
+    height: 21vh;
+}
+
+.Video_Container {
+    float: left;
+    margin-left: 1vw;
+    margin-right: 1vw;
+    margin-top: 0vh;
 }
