@@ -211,7 +211,7 @@ def multiPersonPostureRecognition(outputs, frame):
                         # log video output path in database through post request
                         requests.post(
                             url = "https://localhost:5001/VideoPath", 
-                            json = {'videoPath': "http://localhost:8000/video_sample/%s"%videoOutputName},
+                            json = {'videoPath': "video_sample/%s"%videoOutputName},
                             verify = False)
                     
                     # set person's posture state
@@ -258,7 +258,7 @@ def multiPersonPostureRecognition(outputs, frame):
                         # log video output path in database through post request
                         requests.post(
                             url = "https://localhost:5001/VideoPath", 
-                            json = {'videoPath': "http://localhost:8000/video_sample/%s"%videoOutputName},
+                            json = {'videoPath': "video_sample/%s"%videoOutputName},
                             verify = False)
                     
                     # set person's posture state
@@ -307,7 +307,7 @@ def multiPersonPostureRecognition(outputs, frame):
                         # log video output path in database through post request
                         requests.post(
                             url = "https://localhost:5001/VideoPath", 
-                            json = {'videoPath': "http://localhost:8000/video_sample/%s"%videoOutputName},
+                            json = {'videoPath': "video_sample/%s"%videoOutputName},
                             verify = False)
                     
                     # set person's posture state
@@ -353,7 +353,7 @@ def multiPersonPostureRecognition(outputs, frame):
                         # log video output path in database through post request
                         requests.post(
                             url = "https://localhost:5001/VideoPath", 
-                            json = {'videoPath': "http://localhost:8000/video_sample/%s"%videoOutputName},
+                            json = {'videoPath': "video_sample/%s"%videoOutputName},
                             verify = False)
                     
                     # set person's posture state

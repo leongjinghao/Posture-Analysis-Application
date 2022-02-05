@@ -37,9 +37,9 @@ namespace PostureRecognitionAPI.Repositories
             return await _context.VideoPaths.FindAsync(id);
         }
 
-        public async Task<IEnumerable<VideoPath>> GetAll()
+        public async Task<IEnumerable<String>> GetAll()
         {
-            return await _context.VideoPaths.ToListAsync();
+            return await _context.VideoPaths.Select(vp => vp.videoPath).ToListAsync();
         }
 
         public async Task Update(VideoPath videoPath)
