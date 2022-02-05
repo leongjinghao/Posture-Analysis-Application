@@ -1,4 +1,5 @@
 import ast
+import math
 import sys
 import cv2
 import numpy as np
@@ -116,7 +117,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 boxDistDiff[j] = float("inf")
             # else calculate the difference in distance for the center point for each posture estimator object
             else:
-                boxDistDiff[j] = pow(poseEstimatorDim[j][0] - ctr_pt[0], 2) + pow(poseEstimatorDim[j][1] - ctr_pt[1], 2)
+                boxDistDiff[j] = math.sqrt(pow(poseEstimatorDim[j][0] - ctr_pt[0], 2) + pow(poseEstimatorDim[j][1] - ctr_pt[1], 2))
 
         # retrieve the index of posture estimator that was used for the person detected previously
         # by selecting the least distance difference
