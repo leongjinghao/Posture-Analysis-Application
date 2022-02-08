@@ -1,4 +1,6 @@
 import ast
+import datetime
+import math
 import sys
 import cv2
 import numpy as np
@@ -116,7 +118,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 boxDistDiff[j] = float("inf")
             # else calculate the difference in distance for the center point for each posture estimator object
             else:
-                boxDistDiff[j] = pow(poseEstimatorDim[j][0] - ctr_pt[0], 2) + pow(poseEstimatorDim[j][1] - ctr_pt[1], 2)
+                boxDistDiff[j] = math.sqrt(pow(poseEstimatorDim[j][0] - ctr_pt[0], 2) + pow(poseEstimatorDim[j][1] - ctr_pt[1], 2))
 
         # retrieve the index of posture estimator that was used for the person detected previously
         # by selecting the least distance difference
@@ -196,18 +198,30 @@ def multiPersonPostureRecognition(outputs, frame):
                 # consolidate and save the good posture frames of the person into a video
                 # note: poseObjIdx can be mapped to a person
                 if personPostureState[poseObjIdx] != "bad":
-                    if len(framesArray[poseObjIdx]) != 0:
-                        out = cv2.VideoWriter('my-app\public\\video_sample\good_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
+                    # drop unstable frames of detection with total buffer frame <= 5
+                    if len(framesArray[poseObjIdx]) > 5:
                         
+                        # store buffered frames of the detected person's good posture as video output in react public folder
+                        videoOutputName = 'good_posture_%s.avi'%datetime.datetime.now().strftime("%Y-%m-%d_%H.%M.%S")
+                        out = cv2.VideoWriter('my-app\public\\video_sample\%s'%videoOutputName, cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
+
                         for k in range(len(framesArray[poseObjIdx])):
                             out.write(framesArray[poseObjIdx][k])
                         
                         out.release()
+
+                        # log video output path in database through post request
+                        requests.post(
+                            url = "https://localhost:5001/VideoPath", 
+                            json = {'videoPath': "video_sample/%s"%videoOutputName},
+                            verify = False)
                     
                     # set person's posture state
                     personPostureState[poseObjIdx] = "bad"
                     
+                    # replace buffer with the person's newly detected bad posture frame
                     framesArray[poseObjIdx] = [frame]
+
                 # else the person was performing bad posture previously,
                 # append bad posture frame to the framesArray
                 else:
@@ -231,17 +245,28 @@ def multiPersonPostureRecognition(outputs, frame):
                 # consolidate and save the bad posture frames of the person into a video
                 # note: poseObjIdx can be mapped to a person
                 if personPostureState[poseObjIdx] != "good":
-                    if len(framesArray[poseObjIdx]) != 0:
-                        out = cv2.VideoWriter('my-app\public\\video_sample\\bad_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
+                    # drop unstable frames of detection with total buffer frame <= 5
+                    if len(framesArray[poseObjIdx]) > 5:
+                        
+                        # store buffered frames of the detected person's bad posture as video output in react public folder
+                        videoOutputName = 'bad_posture_%s.avi'%datetime.datetime.now().strftime("%Y-%m-%d_%H.%M.%S")
+                        out = cv2.VideoWriter('my-app\public\\video_sample\%s'%videoOutputName, cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
                         
                         for k in range(len(framesArray[poseObjIdx])):
                             out.write(framesArray[poseObjIdx][k])
                         
                         out.release()
+
+                        # log video output path in database through post request
+                        requests.post(
+                            url = "https://localhost:5001/VideoPath", 
+                            json = {'videoPath': "video_sample/%s"%videoOutputName},
+                            verify = False)
                     
                     # set person's posture state
                     personPostureState[poseObjIdx] = "good"
 
+                    # replace buffer with the person's newly detected good posture frame
                     framesArray[poseObjIdx] = [frame]
 
                 # else the person was performing good posture previously,
@@ -269,13 +294,23 @@ def multiPersonPostureRecognition(outputs, frame):
                 # consolidate and save the good posture frames of the person into a video
                 # note: poseObjIdx can be mapped to a person
                 if personPostureState[poseObjIdx] != "bad":
-                    if len(framesArray[poseObjIdx]) != 0:
-                        out = cv2.VideoWriter('my-app\public\\video_sample\good_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
+                    # drop unstable frames of detection with total buffer frame <= 5
+                    if len(framesArray[poseObjIdx]) > 5:
+                        
+                        # store buffered frames of the detected person's good posture as video output in react public folder
+                        videoOutputName = 'good_posture_%s.avi'%datetime.datetime.now().strftime("%Y-%m-%d_%H.%M.%S")
+                        out = cv2.VideoWriter('my-app\public\\video_sample\%s'%videoOutputName, cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
                         
                         for k in range(len(framesArray[poseObjIdx])):
                             out.write(framesArray[poseObjIdx][k])
 
                         out.release()
+
+                        # log video output path in database through post request
+                        requests.post(
+                            url = "https://localhost:5001/VideoPath", 
+                            json = {'videoPath': "video_sample/%s"%videoOutputName},
+                            verify = False)
                     
                     # set person's posture state
                     personPostureState[poseObjIdx] = "bad"
@@ -305,13 +340,23 @@ def multiPersonPostureRecognition(outputs, frame):
                 # consolidate and save the bad posture frames of the person into a video
                 # note: poseObjIdx can be mapped to a person
                 if personPostureState[poseObjIdx] != "good":
-                    if len(framesArray[poseObjIdx]) != 0:
-                        out = cv2.VideoWriter('my-app\public\\video_sample\\bad_posture_%s.avi'%time.time(), cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
+                    # drop unstable frames of detection with total buffer frame <= 5
+                    if len(framesArray[poseObjIdx]) > 5:
+                        
+                        # store buffered frames of the detected person's good posture as video output in react public folder
+                        videoOutputName = 'bad_posture_%s.avi'%datetime.datetime.now().strftime("%Y-%m-%d_%H.%M.%S")
+                        out = cv2.VideoWriter('my-app\public\\video_sample\%s'%videoOutputName, cv2.VideoWriter_fourcc(*'DIVX'), 15, (wT, hT))
                         
                         for k in range(len(framesArray[poseObjIdx])):
                             out.write(framesArray[poseObjIdx][k])
                         
                         out.release()
+
+                        # log video output path in database through post request
+                        requests.post(
+                            url = "https://localhost:5001/VideoPath", 
+                            json = {'videoPath': "video_sample/%s"%videoOutputName},
+                            verify = False)
                     
                     # set person's posture state
                     personPostureState[poseObjIdx] = "good"
