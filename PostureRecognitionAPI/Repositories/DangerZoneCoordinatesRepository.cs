@@ -36,7 +36,7 @@ namespace PostureRecognitionAPI.Repositories
         {
             var attribute = new int[] { cameraId };
 
-            return await (_context.DangerZoneCoordinates.Where(dzc => attribute.Contains(dzc.CameraId))).ToListAsync();
+            return await (_context.DangerZoneCoordinates.Where(dzc => attribute.Contains(dzc.cameraId))).ToListAsync();
         }
 
         public async Task<IEnumerable<DangerZoneCoordinates>> GetAll()
@@ -46,12 +46,12 @@ namespace PostureRecognitionAPI.Repositories
 
         public async Task Update(DangerZoneCoordinates dangerZoneCoordinates)
         {
-            var itemToUpdate = await _context.DangerZoneCoordinates.FindAsync(dangerZoneCoordinates.Id);
+            var itemToUpdate = await _context.DangerZoneCoordinates.FindAsync(dangerZoneCoordinates.id);
             if (itemToUpdate == null)
                 throw new NullReferenceException();
 
-            itemToUpdate.CameraId = dangerZoneCoordinates.CameraId;
-            itemToUpdate.Coordinates = dangerZoneCoordinates.Coordinates;
+            itemToUpdate.cameraId = dangerZoneCoordinates.cameraId;
+            itemToUpdate.coordinates = dangerZoneCoordinates.coordinates;
             await _context.SaveChangesAsync();
         }
     }

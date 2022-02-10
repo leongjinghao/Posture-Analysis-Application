@@ -26,6 +26,7 @@ namespace PostureRecognitionAPI
             services.AddScoped<IDataContext>(provider => provider.GetService<DataContext>());
             services.AddScoped<IDangerZoneCoordinatesRepository, DangerZoneCoordinatesRepository>();
             services.AddScoped<IPostureLogRepository, PostureLogRepository>();
+            services.AddScoped<IVideoPathRepository, VideoPathRepository>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

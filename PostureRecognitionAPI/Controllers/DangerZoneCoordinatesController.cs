@@ -41,9 +41,9 @@ namespace PostureRecognitionAPI.Controllers
         {
             var dangerZoneCoordinates = new DangerZoneCoordinates
             {
-              Id = id,
-              CameraId = updateDangerZoneCoordinatesDto.CameraId,
-              Coordinates  = updateDangerZoneCoordinatesDto.Coordinates
+              id = id,
+              cameraId = updateDangerZoneCoordinatesDto.cameraId,
+              coordinates  = updateDangerZoneCoordinatesDto.coordinates
             };
 
             await _dangerZoneCoordinatesRepository.Update(dangerZoneCoordinates);
@@ -62,8 +62,8 @@ namespace PostureRecognitionAPI.Controllers
         {
             var dangerZoneCoordinates = new DangerZoneCoordinates
             {
-              CameraId = createDangerZoneCoordinatesDto.CameraId,
-              Coordinates  = createDangerZoneCoordinatesDto.Coordinates
+              cameraId = createDangerZoneCoordinatesDto.cameraId,
+              coordinates  = createDangerZoneCoordinatesDto.coordinates
             };
 
             await _dangerZoneCoordinatesRepository.Add(dangerZoneCoordinates);
