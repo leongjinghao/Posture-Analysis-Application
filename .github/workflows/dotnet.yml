@@ -17,9 +17,12 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
+    - name: Build with dotnet
+      run: dotnet build Document.Approval.sln --configuration Release
+    - name: dotnet publish
+      run: dotnet publish Document.Approval.sln -c Release -o ${{env.DOTNET_ROOT}}/PostureRecognitionAPI
     - name: Restore dependencies
       run: dotnet restore
-      working-directory: PostureRecognitionAPI
     - name: Build
       run: dotnet build --no-restore
     - name: Test
