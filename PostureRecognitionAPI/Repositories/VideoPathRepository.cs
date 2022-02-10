@@ -41,7 +41,6 @@ namespace PostureRecognitionAPI.Repositories
             string reactPublicPath = repoPath + "\\my-app\\public\\video_sample";
             string fullVideoPath = reactPublicPath + "\\" + videoName;
 
-            File.SetAttributes(@fullVideoPath, FileAttributes.Normal);
             File.Delete(@fullVideoPath);
         }
 
