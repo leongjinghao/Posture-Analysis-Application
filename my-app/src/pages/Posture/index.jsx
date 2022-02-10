@@ -11,7 +11,7 @@ class App extends Component {
     }
 
     componentDidMount() {
-        fetch("https://api.thedogapi.com/v1/images/search?limit=2")
+        fetch("https://localhost:5001/VideoPath")
             .then(response => {
                 if (!response.ok) {
                     throw Error("Error fetching the posture videos");

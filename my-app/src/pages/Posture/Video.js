@@ -43,12 +43,12 @@ class Video extends React.Component {
     render() {
         const { visible, loading } = this.state;
         const displayVideos = () => {
-            return videolist.map(video => {
+            return this.props.videos.map(video => {
                 return (<>
                     <Col xs={12} xl={6} >
                         <div className="video-container">
                             <video className='video-size' preload='metadata' onClick={this.showModal(video)} >
-                                <source src={video + '.mp4'} type='video/mp4' />
+                                <source src={video + '.avi'} type='video/avi' />
                             </video>
                             <p className="video-text">{video}<br />31/1/2022</p>
                         </div>
