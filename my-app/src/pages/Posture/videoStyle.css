@@ -1,0 +1,19 @@
+.video-container {
+    width: 100%;
+    height: auto;
+}
+
+.video-size {
+    width: 90%;
+    height: 21vh;
+    object-fit: cover;
+}
+
+.video-text {
+    margin-left: 2%;
+}
+
+.video-modal {
+    height: 100%;
+    width: auto;
+}
