@@ -2,7 +2,10 @@ name: .NET
 
 on:
   push:
-    branches: [ main ]
+    branches: 
+    - main
+    - features/*
+    - feature/*
   pull_request:
     branches: [ main ]
 
@@ -20,8 +23,6 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
       working-directory: PostureRecognitionAPI
-    - name: Restore dependencies
-      run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
     - name: Test
