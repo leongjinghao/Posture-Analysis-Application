@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PostureRecognitionAPI.Data;
 using PostureRecognitionAPI.Models;
+using System.IO;
+using System.Reflection;
 
 namespace PostureRecognitionAPI.Repositories
 {
@@ -30,6 +32,16 @@ namespace PostureRecognitionAPI.Repositories
             
             _context.VideoPaths.Remove(itemToDelete);
             await _context.SaveChangesAsync();
+
+            string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string repoPath = Directory.GetParent(
+                                Directory.GetParent(
+                                    Directory.GetParent(
+                                        Directory.GetParent(path).FullName).FullName).FullName).FullName;
+            string reactPublicPath = repoPath + "\\my-app\\public\\video_sample";
+            string fullVideoPath = reactPublicPath + "\\" + videoName;
+
+            File.Delete(@fullVideoPath);
         }
 
         public async Task<VideoPath> Get(int id)
