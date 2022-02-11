@@ -17,11 +17,10 @@ class Video extends React.Component {
         videoUrl: '',
         videoName: '',
         videos: [],
-        // DataIsLoaded: false
     };
 
     componentDidMount() {
-        fetch("https://localhost:5001/VideoPath") // https://api.thedogapi.com/v1/images/search?limit=10
+        fetch("https://localhost:5001/VideoPath")
             .then(response => {
                 if (!response.ok) {
                     throw Error("Error fetching the posture videos")
@@ -34,13 +33,6 @@ class Video extends React.Component {
                         throw Error(err.message);
                     });
             });
-        // .then(response => response.json())
-        // .then((json) => {
-        //     this.setState({
-        //         videos: json,
-        //         DataIsLoaded: true
-        //     });
-        // })
     }
 
     showModal = (url, id) => {

@@ -4,14 +4,7 @@ import './VideoStyle.css';
 
 function VideoModal({ title, url, visible, loading, handleOk, handleCancel }) {
 
-    // async function deleteVideo(item, url) {
-        
-    //     // extract videoName from path
-    //     var videoName = url.replace('video_sample/', '')
-
-    //     fetch('https://localhost:5001/VideoPath/' + videoName, { method: 'DELETE' })
-    //     handleCancel
-    // }
+    var videoName = url.replace('video_sample/', '')
 
     return (
         <>
@@ -24,7 +17,7 @@ function VideoModal({ title, url, visible, loading, handleOk, handleCancel }) {
                 onOk={handleOk}
                 onCancel={handleCancel}
                 footer={[
-                    <Button href={url} download='file' type="primary" loading={loading} onClick={handleOk}>
+                    <Button href={url} download={url} type="primary" loading={loading} onClick={handleOk}>
                         Export
                     </Button>,
                     // Algorithm to download video
@@ -32,9 +25,9 @@ function VideoModal({ title, url, visible, loading, handleOk, handleCancel }) {
                         key="back"
                         type="primary"
                         loading={loading}
-                        onClick={
-                            // fetch(url + '/' + title, { method: 'DELETE' }), 
-                            // deleteVideo
+                        onClick={() => {
+                            fetch('https://localhost:5001/VideoPath/' + videoName, { method: 'DELETE' });
+                        }
                         }
                     >
                         Delete
@@ -44,7 +37,7 @@ function VideoModal({ title, url, visible, loading, handleOk, handleCancel }) {
                 ]}
             >
                 <video className='video-modal' preload='metadata' controls autoPlay>
-                    <source src={url} type='video/mp4'/>
+                    <source src={url} type='video/mp4' />
                 </video>
             </Modal>
         </>
