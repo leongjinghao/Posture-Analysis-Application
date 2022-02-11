@@ -4,7 +4,7 @@ import './VideoStyle.css';
 
 function VideoModal({ title, url, visible, loading, handleOk, handleCancel }) {
 
-    var videoName = url.replace('video_sample/', '')
+    var videoName = url.replace('posture_video_recording/', '')
 
     return (
         <>

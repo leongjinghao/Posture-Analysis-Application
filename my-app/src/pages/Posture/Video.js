@@ -70,7 +70,7 @@ class Video extends React.Component {
                         <video className='video-size' preload='metadata' onClick={this.showModal(video.videoPath, video.id)} >
                             <source src={video.videoPath} type='video/mp4' />
                         </video>
-                        <p className="video-text">{video.videoPath}<br />31/1/2022</p>
+                        <p className="video-text">{video.videoPath.replace('posture_video_recording/', '')}<br />31/1/2022</p>
                     </div>
                 </Col>
             )

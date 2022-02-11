@@ -38,7 +38,7 @@ namespace PostureRecognitionAPI.Repositories
                                 Directory.GetParent(
                                     Directory.GetParent(
                                         Directory.GetParent(path).FullName).FullName).FullName).FullName;
-            string reactPublicPath = repoPath + "\\my-app\\public\\video_sample";
+            string reactPublicPath = repoPath + "\\my-app\\public\\posture_video_recording";
             string fullVideoPath = reactPublicPath + "\\" + videoName;
 
             File.Delete(@fullVideoPath);
