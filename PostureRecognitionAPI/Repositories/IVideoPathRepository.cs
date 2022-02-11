@@ -7,7 +7,7 @@ namespace PostureRecognitionAPI.Repositories
     public interface IVideoPathRepository
     {
         Task<VideoPath> Get(int id);
-        Task<IEnumerable<string>> GetAll();
+        Task<IEnumerable<VideoPath>> GetAll();
         Task Add(VideoPath videoPath);
         Task Delete(string videoName);
         Task Update(VideoPath videoPath);
