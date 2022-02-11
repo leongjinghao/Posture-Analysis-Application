@@ -38,7 +38,7 @@ namespace PostureRecognitionAPI.Repositories
                                 Directory.GetParent(
                                     Directory.GetParent(
                                         Directory.GetParent(path).FullName).FullName).FullName).FullName;
-            string reactPublicPath = repoPath + "\\my-app\\public\\video_sample";
+            string reactPublicPath = repoPath + "\\my-app\\public\\posture_video_recording";
             string fullVideoPath = reactPublicPath + "\\" + videoName;
 
             File.Delete(@fullVideoPath);
@@ -49,9 +49,9 @@ namespace PostureRecognitionAPI.Repositories
             return await _context.VideoPaths.FindAsync(id);
         }
 
-        public async Task<IEnumerable<String>> GetAll()
+        public async Task<IEnumerable<VideoPath>> GetAll()
         {
-            return await _context.VideoPaths.Select(vp => vp.videoPath).ToListAsync();
+            return await _context.VideoPaths.ToListAsync();
         }
 
         public async Task Update(VideoPath videoPath)

@@ -1,0 +1,1 @@
+## Folder to store video recordings of posture recognition

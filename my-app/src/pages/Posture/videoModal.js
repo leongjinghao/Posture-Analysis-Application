@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Modal, Button } from 'antd';
 import './VideoStyle.css';
 
-function VideoModal({ url, visible, loading, handleOk, handleCancel }) {
-    console.log(url)
+function VideoModal({ title, url, visible, loading, handleOk, handleCancel }) {
+
+    var videoName = url.replace('posture_video_recording/', '')
+
     return (
         <>
             <Modal
@@ -11,28 +13,31 @@ function VideoModal({ url, visible, loading, handleOk, handleCancel }) {
                 width={'fit-content'}
                 bodyStyle={{ height: 450, width: 'fit-content' }}
                 visible={visible}
-                title={url}
+                title={title}
                 onOk={handleOk}
                 onCancel={handleCancel}
                 footer={[
-                    <Button href={url + '.mp4'} download='file' type="primary" loading={loading} onClick={handleOk}>
+                    <Button href={url} download={url} type="primary" loading={loading} onClick={handleOk}>
                         Export
                     </Button>,
                     // Algorithm to download video
                     <Button
-                        key="link"
-                        href="https://google.com"
+                        key="back"
                         type="primary"
                         loading={loading}
-                        onClick={handleOk}
+                        onClick={() => {
+                            fetch('https://localhost:5001/VideoPath/' + videoName, { method: 'DELETE' });
+                        }
+                        }
                     >
                         Delete
                     </Button>,
                     // Algorithm to delete video
+
                 ]}
             >
                 <video className='video-modal' preload='metadata' controls autoPlay>
-                    <source src={url + ".mp4"} />
+                    <source src={url} type='video/mp4' />
                 </video>
             </Modal>
         </>

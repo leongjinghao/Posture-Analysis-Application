@@ -87,17 +87,6 @@ export default defineConfig({
     },
 
     {
-      name: 'Test',
-      icon: 'table',
-      path: '/Test',
-      component: './Test',
-    },
-    {
-      path: '/Test',
-      redirect: '/Test',
-    },
-
-    {
       path: '/account',
       routes: [
         {
