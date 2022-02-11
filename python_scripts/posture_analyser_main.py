@@ -203,7 +203,7 @@ def multiPersonPostureRecognition(outputs, frame):
                         
                         # store buffered frames of the detected person's good posture as video output in react public folder
                         videoOutputName = 'good_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
-                        out = cv2.VideoWriter('my-app\public\\posture_video_recording\%s'%videoOutputName, cv2.VideoWriter_fourcc(*'H264'), 15, (wT, hT))
+                        out = cv2.VideoWriter('my-app\public\\posture_video_recording\%s'%videoOutputName, cv2.VideoWriter_fourcc(*'avc1'), 15, (wT, hT))
 
                         for k in range(len(framesArray[poseObjIdx])):
                             out.write(framesArray[poseObjIdx][k])
@@ -250,7 +250,7 @@ def multiPersonPostureRecognition(outputs, frame):
                         
                         # store buffered frames of the detected person's bad posture as video output in react public folder
                         videoOutputName = 'bad_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
-                        out = cv2.VideoWriter('my-app\public\\posture_video_recording\%s'%videoOutputName, cv2.VideoWriter_fourcc(*'H264'), 15, (wT, hT))
+                        out = cv2.VideoWriter('my-app\public\\posture_video_recording\%s'%videoOutputName, cv2.VideoWriter_fourcc(*'avc1'), 15, (wT, hT))
                         
                         for k in range(len(framesArray[poseObjIdx])):
                             out.write(framesArray[poseObjIdx][k])
@@ -299,7 +299,7 @@ def multiPersonPostureRecognition(outputs, frame):
                         
                         # store buffered frames of the detected person's good posture as video output in react public folder
                         videoOutputName = 'good_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
-                        out = cv2.VideoWriter('my-app\public\\posture_video_recording\%s'%videoOutputName, cv2.VideoWriter_fourcc(*'H264'), 15, (wT, hT))
+                        out = cv2.VideoWriter('my-app\public\\posture_video_recording\%s'%videoOutputName, cv2.VideoWriter_fourcc(*'avc1'), 15, (wT, hT))
                         
                         for k in range(len(framesArray[poseObjIdx])):
                             out.write(framesArray[poseObjIdx][k])
@@ -345,7 +345,7 @@ def multiPersonPostureRecognition(outputs, frame):
                         
                         # store buffered frames of the detected person's good posture as video output in react public folder
                         videoOutputName = 'bad_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
-                        out = cv2.VideoWriter('my-app\public\\posture_video_recording\%s'%videoOutputName, cv2.VideoWriter_fourcc(*'H264'), 15, (wT, hT))
+                        out = cv2.VideoWriter('my-app\public\\posture_video_recording\%s'%videoOutputName, cv2.VideoWriter_fourcc(*'avc1'), 15, (wT, hT))
                         
                         for k in range(len(framesArray[poseObjIdx])):
                             out.write(framesArray[poseObjIdx][k])
