@@ -75,10 +75,10 @@ class Video extends React.Component {
             return videos.map(video => (
                 <Col xs={12} xl={6} >
                     <div className="video-container">
-                        <video className='video-size' preload='metadata' onClick={this.showModal(video.url, video.id)} >
-                            <source src={video.url} type='video/avi' />
+                        <video className='video-size' preload='metadata' onClick={this.showModal(video.videoPath, video.id)} >
+                            <source src={video.videoPath} type='video/mp4' />
                         </video>
-                        <p className="video-text">{video.id}<br />31/1/2022</p>
+                        <p className="video-text">{video.videoPath}<br />31/1/2022</p>
                     </div>
                 </Col>
             )

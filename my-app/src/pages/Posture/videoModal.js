@@ -5,7 +5,11 @@ import './VideoStyle.css';
 function VideoModal({ title, url, visible, loading, handleOk, handleCancel }) {
 
     // async function deleteVideo(item, url) {
-    //     fetch(url + '/' + item, { method: 'DELETE' })
+        
+    //     // extract videoName from path
+    //     var videoName = url.replace('video_sample/', '')
+
+    //     fetch('https://localhost:5001/VideoPath/' + videoName, { method: 'DELETE' })
     //     handleCancel
     // }
 
@@ -30,7 +34,7 @@ function VideoModal({ title, url, visible, loading, handleOk, handleCancel }) {
                         loading={loading}
                         onClick={
                             // fetch(url + '/' + title, { method: 'DELETE' }), 
-                            handleCancel
+                            // deleteVideo
                         }
                     >
                         Delete
@@ -40,7 +44,7 @@ function VideoModal({ title, url, visible, loading, handleOk, handleCancel }) {
                 ]}
             >
                 <video className='video-modal' preload='metadata' controls autoPlay>
-                    <source src={url} />
+                    <source src={url} type='video/mp4'/>
                 </video>
             </Modal>
         </>
