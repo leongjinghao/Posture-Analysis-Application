@@ -2,13 +2,11 @@ from flask import Flask, render_template, Response
 import cv2
 
 app = Flask(__name__)
-
+camera = cv2.VideoCapture(0)
 
 
 def generate_frames():
     while True:
-        camera = cv2.VideoCapture(0)
-
         ## read the camera frame
         success, frame = camera.read()
         if not success:
@@ -32,4 +30,4 @@ def video():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(port=5002, debug=True)
