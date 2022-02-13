@@ -1,4 +1,4 @@
-name: PostureRecognitionReactWebApplication
+name: ReactWebApplication
 on: 
   push:
     branches: 
