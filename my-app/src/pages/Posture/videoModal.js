@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Modal, Button } from 'antd';
-import './VideoStyle.css';
+import './videoStyle.css';
 
 function VideoModal({ title, url, visible, loading, handleOk, handleCancel }) {
 
