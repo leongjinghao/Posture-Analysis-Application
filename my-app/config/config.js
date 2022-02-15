@@ -87,14 +87,23 @@ export default defineConfig({
     },
 
     {
-      name: 'Test',
+      name: 'Livefeed',
       icon: 'table',
-      path: '/Test',
-      component: './Test',
+      path: '/Livefeed',
+      component: './Livefeed',
     },
     {
-      path: '/Test',
-      redirect: '/Test',
+      path: '/Livefeed',
+      redirect: '/Livefeed',
+    },
+
+    {
+      path: '/Livefeed/camera2',
+      component: './Livefeed/camera2',
+    },
+    {
+      path: '/Livefeed/camera2',
+      redirect: '/Livefeed/camera2',
     },
 
     {
