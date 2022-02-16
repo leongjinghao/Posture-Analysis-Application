@@ -3,7 +3,6 @@ import ProCard from "@ant-design/pro-card";
 import { Dropdown, Button } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import './index.css';
-import  WebcamClass  from "./webcam";
 import  menuClass  from "./dropdown";
 
 
