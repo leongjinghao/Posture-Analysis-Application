@@ -198,15 +198,21 @@ def multiPersonPostureRecognition(outputs, frame):
                             'classification': 'bad'},
                     verify = False)
 
-                # if the person was performing good posture previously, 
+                # if the person was performing good posture previously or buffer length is more than 105 (7sec for 15fps video),
                 # consolidate and save the good posture frames of the person into a video
                 # note: poseObjIdx can be mapped to a person
-                if personPostureState[poseObjIdx] != "bad":
+                if personPostureState[poseObjIdx] != "bad" or len(framesArray[poseObjIdx]) >= 105:
+                    
+                    # set video name according to context
+                    if personPostureState[poseObjIdx] != "bad":
+                        videoOutputName = 'good_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
+                    else:
+                        videoOutputName = 'bad_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
+
                     # drop unstable frames of detection with total buffer frame <= 5
                     if len(framesArray[poseObjIdx]) > 5:
                         
                         # store buffered frames of the detected person's good posture as video output in react public folder
-                        videoOutputName = 'good_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
                         out = cv2.VideoWriter('my-app\public\\posture_video_recording\%s'%videoOutputName, cv2.VideoWriter_fourcc(*'avc1'), 15, (wT, hT))
 
                         for k in range(len(framesArray[poseObjIdx])):
@@ -245,15 +251,21 @@ def multiPersonPostureRecognition(outputs, frame):
                             'classification': 'good'},
                     verify = False)
                 
-                # if the person was performing bad posture previously, 
+                # if the person was performing bad posture previously or buffer length is more than 105 (7sec for 15fps video),
                 # consolidate and save the bad posture frames of the person into a video
                 # note: poseObjIdx can be mapped to a person
-                if personPostureState[poseObjIdx] != "good":
+                if personPostureState[poseObjIdx] != "good" or len(framesArray[poseObjIdx]) >= 105:
+                    
+                    # set video name according to context
+                    if personPostureState[poseObjIdx] != "good":
+                        videoOutputName = 'bad_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
+                    else:
+                        videoOutputName = 'good_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
+
                     # drop unstable frames of detection with total buffer frame <= 5
                     if len(framesArray[poseObjIdx]) > 5:
                         
                         # store buffered frames of the detected person's bad posture as video output in react public folder
-                        videoOutputName = 'bad_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
                         out = cv2.VideoWriter('my-app\public\\posture_video_recording\%s'%videoOutputName, cv2.VideoWriter_fourcc(*'avc1'), 15, (wT, hT))
                         
                         for k in range(len(framesArray[poseObjIdx])):
@@ -294,15 +306,21 @@ def multiPersonPostureRecognition(outputs, frame):
                             'classification': 'bad'},
                     verify = False)
                 
-                # if the person was performing good posture previously, 
+                # if the person was performing good posture previously or buffer length is more than 105 (7sec for 15fps video), 
                 # consolidate and save the good posture frames of the person into a video
                 # note: poseObjIdx can be mapped to a person
-                if personPostureState[poseObjIdx] != "bad":
+                if personPostureState[poseObjIdx] != "bad" or len(framesArray[poseObjIdx]) >= 105:
+                    
+                    # set video name according to context
+                    if personPostureState[poseObjIdx] != "bad":
+                        videoOutputName = 'good_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
+                    else:
+                        videoOutputName = 'bad_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
+
                     # drop unstable frames of detection with total buffer frame <= 5
                     if len(framesArray[poseObjIdx]) > 5:
                         
                         # store buffered frames of the detected person's good posture as video output in react public folder
-                        videoOutputName = 'good_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
                         out = cv2.VideoWriter('my-app\public\\posture_video_recording\%s'%videoOutputName, cv2.VideoWriter_fourcc(*'avc1'), 15, (wT, hT))
                         
                         for k in range(len(framesArray[poseObjIdx])):
@@ -340,15 +358,21 @@ def multiPersonPostureRecognition(outputs, frame):
                             'classification': 'good'},
                     verify = False)
 
-                # if the person was performing bad posture previously, 
+                # if the person was performing bad posture previously or buffer length is more than 105 (7sec for 15fps video), 
                 # consolidate and save the bad posture frames of the person into a video
                 # note: poseObjIdx can be mapped to a person
-                if personPostureState[poseObjIdx] != "good":
+                if personPostureState[poseObjIdx] != "good" or len(framesArray[poseObjIdx]) >= 105:
+                    
+                    # set video name according to context
+                    if personPostureState[poseObjIdx] != "good":
+                        videoOutputName = 'bad_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
+                    else:
+                        videoOutputName = 'good_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
+
                     # drop unstable frames of detection with total buffer frame <= 5
                     if len(framesArray[poseObjIdx]) > 5:
                         
                         # store buffered frames of the detected person's good posture as video output in react public folder
-                        videoOutputName = 'bad_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
                         out = cv2.VideoWriter('my-app\public\\posture_video_recording\%s'%videoOutputName, cv2.VideoWriter_fourcc(*'avc1'), 15, (wT, hT))
                         
                         for k in range(len(framesArray[poseObjIdx])):
