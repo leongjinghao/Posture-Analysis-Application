@@ -29,7 +29,7 @@ class App extends Component {
                         </div>
                     </div>
                     <div>
-                        <img src="http://localhost:5002/video" width="50%" />
+                        <img src="http://localhost:5003/video" />
                     </div>
                 </ProCard.TabPane>
                 <ProCard.TabPane key=" tab2" tab="List of Videos">

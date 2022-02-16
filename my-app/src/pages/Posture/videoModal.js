@@ -25,10 +25,11 @@ function VideoModal({ url, visible, loading, handleOk, handleCancel }) {
                     <Button
                         key="back"
                         type="primary"
-                        loading={loading}
                         onClick={() => {
                             fetch('https://localhost:5001/VideoPath/' + videoName, { method: 'DELETE' });
-                            handleCancel
+                            handleCancel;
+                            // Add reloading of page after delete
+                            window.location.reload();
                         }
                         }
                     >
