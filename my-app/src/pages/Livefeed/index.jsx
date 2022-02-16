@@ -1,41 +1,17 @@
 import React, { Component, useState} from "react";
 import ProCard from "@ant-design/pro-card";
-import Webcam from "react-webcam";
-import { Menu, Dropdown, Button } from 'antd';
+import { Dropdown, Button } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import { history } from 'umi';
-import './index.css'
-
-export const WebcamComponent = () => <Webcam videoConstraints={videoConstraints}/>;
-
-const videoConstraints = {
-    width: 600,
-    height: 450,
-    facingMode: "user"
-};
-
-function handleItem1Click(e) {
-    history.push("/Livefeed")
-  }
-
-function handleItem2Click(e) {
-    history.push("/Livefeed/camera2")
-}
-  
-  
-  const menu = (
-    <Menu>
-      <Menu.Item key="1" onClick={handleItem1Click}>
-        Camera 1
-      </Menu.Item>
-      <Menu.Item key="2" onClick={handleItem2Click}>
-        Camera 2
-      </Menu.Item>
-    </Menu>
-  );
+import './index.css';
+import WebcamClass from "./webcam";
+import menuClass from "./dropdown";
 
 
   class App extends Component{
+    constructor() {
+      super();
+  }
+
     render() {
         return (
             <ProCard>
@@ -44,7 +20,7 @@ function handleItem2Click(e) {
                 <p class='Title'>Camera 1</p>
               </div>
             <div class = 'dropdown1'>
-                <Dropdown overlay={menu}>
+                <Dropdown overlay={menuClass}>
                   <Button>
                       All Cameras <DownOutlined />
                   </Button>
@@ -52,7 +28,7 @@ function handleItem2Click(e) {
             </div>
             </div>
             <div class='webcam-container'>
-                <WebcamComponent />
+                <WebcamClass />
             </div>
             </ProCard>
         )

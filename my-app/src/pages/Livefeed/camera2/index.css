@@ -1,0 +1,14 @@
+.text-dropdown{
+    display:flex; 
+    flex-direction:row;
+}
+
+.dropdown1{
+    margin-left: 900px; /* 4px */
+}
+
+.text{
+    font-family: "Times New Roman", Times, serif;
+    font-weight: 1000;
+    font-size: 35px;
+}

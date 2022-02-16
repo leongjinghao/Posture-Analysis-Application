@@ -11,7 +11,7 @@ class App extends Component {
         return (
             <ProCard tabs={{ type: 'card' }}>
                 <ProCard.TabPane key=" tab1" tab="List of Videos">
-                    <Video />
+                    {/* <Video /> */}
                 </ProCard.TabPane>
                 <ProCard.TabPane key=" tab2" tab="Live Feed">
                 </ProCard.TabPane>
