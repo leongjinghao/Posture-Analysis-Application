@@ -17,23 +17,23 @@ function VideoModal({ title, url, visible, loading, handleOk, handleCancel }) {
                 onOk={handleOk}
                 onCancel={handleCancel}
                 footer={[
+                    // Download videos
                     <Button href={url} download={url} type="primary" loading={loading} onClick={handleOk}>
                         Export
                     </Button>,
-                    // Algorithm to download video
+                    // Delete videos
                     <Button
                         key="back"
                         type="primary"
                         loading={loading}
                         onClick={() => {
                             fetch('https://localhost:5001/VideoPath/' + videoName, { method: 'DELETE' });
+                            handleCancel
                         }
                         }
                     >
                         Delete
                     </Button>,
-                    // Algorithm to delete video
-
                 ]}
             >
                 <video className='video-modal' preload='metadata' controls autoPlay>

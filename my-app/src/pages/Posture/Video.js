@@ -2,13 +2,6 @@ import React, { Component } from "react";
 import VideoModal from './videoModal';
 import { Row, Col } from "antd";
 
-const videolist = ['video_sample/boxing',
-    'video_sample/boxing2', 'video_sample/cycling',
-    'video_sample/dancing', 'video_sample/dancing2',
-    'video_sample/dancing3', 'video_sample/exercise',
-    'video_sample/exercise2', 'video_sample/running',
-    'video_sample/video']
-
 class Video extends React.Component {
 
     state = {
@@ -62,7 +55,6 @@ class Video extends React.Component {
 
     render() {
         const { visible, loading, videos } = this.state;
-        // if (!DataIsLoaded) return <div><h1>Loading ...</h1></div>;
         const displayVideos = () => {
             return videos.map(video => (
                 <Col xs={12} xl={6} >
