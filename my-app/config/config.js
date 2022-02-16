@@ -87,6 +87,26 @@ export default defineConfig({
     },
 
     {
+      name: 'Livefeed',
+      icon: 'table',
+      path: '/Livefeed',
+      component: './Livefeed',
+    },
+    {
+      path: '/Livefeed',
+      redirect: '/Livefeed',
+    },
+
+    {
+      path: '/Livefeed/camera2',
+      component: './Livefeed/camera2',
+    },
+    {
+      path: '/Livefeed/camera2',
+      redirect: '/Livefeed/camera2',
+    },
+
+    {
       path: '/account',
       routes: [
         {
