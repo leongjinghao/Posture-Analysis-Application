@@ -1,6 +1,6 @@
 import React, { Component, useState } from "react";
 import ProCard from "@ant-design/pro-card";
-import Video from './video';
+import Video from './Video';
 import menuClass from "./dropdown";
 import { Dropdown, Button } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
