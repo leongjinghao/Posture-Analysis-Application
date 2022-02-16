@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import VideoModal from './VideoModal';
+import VideoModal from './videoModal';
 import { Row, Col } from "antd";
 
 const videolist = ['video_sample/boxing',

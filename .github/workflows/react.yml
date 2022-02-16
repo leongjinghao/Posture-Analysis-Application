@@ -1,0 +1,30 @@
+name: ReactWebApplication
+on: 
+  push:
+    branches: 
+      - main
+      - features/*
+      - feature/*
+    
+jobs:
+  build:
+  
+    name: Test
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2
+      - name: Yarn install
+        uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: --cwd my-app install
+      - name: Yarn build
+        uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: --cwd my-app build # will run `yarn build` command
+#       Ant Design Pro test config issue
+#       - name: Yarn test
+#         uses: borales/actions-yarn@v2.3.0
+#         with:
+#           cmd: --cwd my-app test # will run `yarn test` command
