@@ -11,6 +11,10 @@ import requests
 from model_training.train_model import predict, MLP
 from shapely.geometry import Polygon
 from urllib3.exceptions import InsecureRequestWarning
+from flask import Flask, render_template, Response
+
+# Used for establishing flask endpoint
+app = Flask(__name__)
 
 # CLI argument(s)
 args = sys.argv[1:]
@@ -376,54 +380,68 @@ def multiPersonPostureRecognition(outputs, frame):
                     f'{classNames[classIds[i]].upper()} {int(confs[i] * 100)}% {str("estimator ID ") + str(poseObjIdx)}',
                     (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
 
-def instance(source):    
-    global pTime
-    global poseEstimatorInUse
-    
-    success, frame = cap.read()
+def instance(source): 
+    while True:
+        global pTime
+        global poseEstimatorInUse
+        
+        success, frame = cap.read()
 
-    # if video stream ended
-    if not success:
-        print('End of video stream from camera %s...'%args[1])
-        sys.exit()
+        # if video stream ended
+        if not success:
+            print('End of video stream from camera %s...'%args[1])
+            sys.exit()
 
-    # convert coordinates (pts) of all danger zone to int32 format
-    pts = [np.array(dangerZone[i], np.int32) for i in range(len(dangerZone))]
-    # plot polygons of all danger zones on video steam
-    for i in range(len(dangerZone)):
-        cv2.polylines(frame, [pts[i]], True, (255, 0, 0), 2)
+        # convert coordinates (pts) of all danger zone to int32 format
+        pts = [np.array(dangerZone[i], np.int32) for i in range(len(dangerZone))]
+        # plot polygons of all danger zones on video steam
+        for i in range(len(dangerZone)):
+            cv2.polylines(frame, [pts[i]], True, (255, 0, 0), 2)
 
-    # inputs from frame are stored in a blob, which will be used for the model input
-    blob = cv2.dnn.blobFromImage(frame, 1 / 255, (320, 320), [0, 0, 0], 1, crop=False)
+        # inputs from frame are stored in a blob, which will be used for the model input
+        blob = cv2.dnn.blobFromImage(frame, 1 / 255, (320, 320), [0, 0, 0], 1, crop=False)
 
-    # set the blob as input for model
-    net.setInput(blob)
+        # set the blob as input for model
+        net.setInput(blob)
 
-    # YOLO's 3 output layers
-    layerNames = net.getLayerNames()
-    outputNames = [layerNames[i - 1] for i in net.getUnconnectedOutLayers()]
+        # YOLO's 3 output layers
+        layerNames = net.getLayerNames()
+        outputNames = [layerNames[i - 1] for i in net.getUnconnectedOutLayers()]
 
-    # retrieve object detection data
-    outputs = net.forward(outputNames)
+        # retrieve object detection data
+        outputs = net.forward(outputNames)
 
-    # reset posture estimator in use for every new frame
-    poseEstimatorInUse = []
+        # reset posture estimator in use for every new frame
+        poseEstimatorInUse = []
 
-    # Detect person on frame, then perform posture recognition based on cropped frame of person
-    multiPersonPostureRecognition(outputs, frame)
+        # Detect person on frame, then perform posture recognition based on cropped frame of person
+        multiPersonPostureRecognition(outputs, frame)
 
-    # show FPS
-    cTime = time.time()
-    fps = 1 / (cTime - pTime)
-    pTime = cTime
-    cv2.putText(frame, "{:.1f} FPS".format(float(fps)), (70, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
+        # show FPS
+        cTime = time.time()
+        fps = 1 / (cTime - pTime)
+        pTime = cTime
+        cv2.putText(frame, "{:.1f} FPS".format(float(fps)), (70, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
 
-    # display video stream with posture landmarks plotted
-    frame = cv2.resize(frame, (1270, 720))
-    cv2.imshow('Video Stream', frame)
-    cv2.waitKey(1)
+        # display video stream with posture landmarks plotted
+        # frame = cv2.resize(frame, (1270, 720))
+        # cv2.imshow('Video Stream', frame)
+        # cv2.waitKey(1)
+        
+        # Function to output video stream on flask endpoint
+        ret, buffer = cv2.imencode('.jpg', frame)
+        frameBuffer = buffer.tobytes()
+        yield (b'--frameBuffer\r\n'
+                b'Content-Type: image/jpeg\r\n\r\n' + frameBuffer + b'\r\n')
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/video')
+def video():
+    return Response(instance(cap), mimetype='multipart/x-mixed-replace; boundary=frameBuffer')
 
 
 if __name__ == "__main__":
-    while True:
-        instance(cap)
+    app.run(port=int(args[2]), debug=True)
