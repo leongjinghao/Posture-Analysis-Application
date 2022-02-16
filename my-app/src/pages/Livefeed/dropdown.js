@@ -5,6 +5,7 @@ import './index.css';
 
 function handleItem1Click(e) {
     history.push("/Livefeed")
+    
   }
 
 function handleItem2Click(e) {

@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { Modal, Button } from 'antd';
 import './videoStyle.css';
 
-function VideoModal({ title, url, visible, loading, handleOk, handleCancel }) {
+function VideoModal({ url, visible, loading, handleOk, handleCancel }) {
 
     var videoName = url.replace('posture_video_recording/', '')
 
@@ -13,7 +13,7 @@ function VideoModal({ title, url, visible, loading, handleOk, handleCancel }) {
                 width={'fit-content'}
                 bodyStyle={{ height: 450, width: 'fit-content' }}
                 visible={visible}
-                title={title}
+                title={videoName}
                 onOk={handleOk}
                 onCancel={handleCancel}
                 footer={[

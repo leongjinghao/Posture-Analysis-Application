@@ -8,7 +8,7 @@ class Video extends React.Component {
         loading: false,
         visible: false,
         videoUrl: '',
-        videoName: '',
+        vidTitle: '',
         videos: [],
     };
 
@@ -28,18 +28,14 @@ class Video extends React.Component {
             });
     }
 
-    showModal = (url, id) => {
+    showModal = (url, title) => {
         return () => {
             this.setState({
                 visible: true,
                 videoUrl: url,
-                videoId: id
+                vidTitle: title
             })
         }
-    }
-
-    displayRightModal(url) {
-        this.setState({ videolink: url });
     }
 
     handleOk = () => {
@@ -59,10 +55,12 @@ class Video extends React.Component {
             return videos.map(video => (
                 <Col xs={12} xl={6} >
                     <div className="video-container">
-                        <video className='video-size' preload='metadata' onClick={this.showModal(video.videoPath, video.id)} >
+                        <video className='video-size' preload='metadata' onClick={this.showModal(video.videoPath, video.videoPath)} >
                             <source src={video.videoPath} type='video/mp4' />
                         </video>
-                        <p className="video-text">{video.videoPath.replace('posture_video_recording/', '')}<br />31/1/2022</p>
+                        <p className="video-text">{video.videoPath.replace('posture_video_recording/','')}
+                            {/* <br />{video.videoPath.replace('posture_video_recording/', '')} */}
+                        </p>
                     </div>
                 </Col>
             )
@@ -72,7 +70,7 @@ class Video extends React.Component {
         return (
             <Row>
                 {displayVideos()}
-                <VideoModal id={this.state.videoId} url={this.state.videoUrl} visible={visible} loading={loading} handleOk={this.handleOk} handleCancel={this.handleCancel} />
+                <VideoModal title={this.state.vidTitle} url={this.state.videoUrl} visible={visible} loading={loading} handleOk={this.handleOk} handleCancel={this.handleCancel} />
             </Row>
         )
     }
