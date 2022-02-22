@@ -26,9 +26,9 @@ import menuClass from "./dropdown";
               </Dropdown>
             </div>
             </div>
-            <div class='webcam-container'>
+            {/* <div class='webcam-container'>
                 <WebcamClass />
-            </div>
+            </div> */}
             </ProCard>
         )
     }

@@ -6,3 +6,4 @@ PostureLogApi/bin
 PostureRecognitionAPI/obj
 PostureRecognitionAPI/bin
 node_modules
+my-app/public/posture_video_recording

@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { Modal, Button } from 'antd';
 import './videoStyle.css';
 
-function VideoModal({ title, url, visible, loading, handleOk, handleCancel }) {
+function VideoModal({ url, visible, loading, handleOk, handleCancel }) {
 
     var videoName = url.replace('posture_video_recording/', '')
 
@@ -13,7 +13,7 @@ function VideoModal({ title, url, visible, loading, handleOk, handleCancel }) {
                 width={'fit-content'}
                 bodyStyle={{ height: 450, width: 'fit-content' }}
                 visible={visible}
-                title={title}
+                title={videoName}
                 onOk={handleOk}
                 onCancel={handleCancel}
                 footer={[
@@ -25,10 +25,11 @@ function VideoModal({ title, url, visible, loading, handleOk, handleCancel }) {
                     <Button
                         key="back"
                         type="primary"
-                        loading={loading}
                         onClick={() => {
                             fetch('https://localhost:5001/VideoPath/' + videoName, { method: 'DELETE' });
-                            handleCancel
+                            handleCancel;
+                            // Add reloading of page after delete
+                            location.reload();
                         }
                         }
                     >
