@@ -29,7 +29,7 @@ function VideoModal({ url, visible, loading, handleOk, handleCancel }) {
                             fetch('https://localhost:5001/VideoPath/' + videoName, { method: 'DELETE' });
                             handleCancel;
                             // Add reloading of page after delete
-                            window.location.reload();
+                            location.reload();
                         }
                         }
                     >

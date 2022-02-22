@@ -59,7 +59,6 @@ class Video extends React.Component {
                             <source src={video.videoPath} type='video/mp4' />
                         </video>
                         <p className="video-text">{video.videoPath.replace('posture_video_recording/','')}
-                            {/* <br />{video.videoPath.replace('posture_video_recording/', '')} */}
                         </p>
                     </div>
                 </Col>
