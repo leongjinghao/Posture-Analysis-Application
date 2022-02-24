@@ -8,7 +8,7 @@ from torch.nn import BCELoss
 from numpy import vstack
 from sklearn.metrics import accuracy_score
 from torch.nn import Module
-# work around for directory not found when importing PostureDataset from posture_analyser main
+# work around for directory not found when importing PostureDataset from posture_analyser_main
 try:
     from posture_dataset import PostureDataset
 except:
