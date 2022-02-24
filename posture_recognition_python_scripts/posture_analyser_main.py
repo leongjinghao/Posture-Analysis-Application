@@ -8,6 +8,7 @@ import mediapipe as mp
 import time
 import torch
 import requests
+from model_training.posture_dataset import PostureDataset
 from model_training.train_model import predict, MLP
 from shapely.geometry import Polygon
 from urllib3.exceptions import InsecureRequestWarning
@@ -31,12 +32,12 @@ pTime = 0
 
 # coco class name
 classNames = []
-with open('python_scripts/YOLO_config/coco.names', 'rt') as f:
+with open('posture_recognition_python_scripts/YOLO_config/coco.names', 'rt') as f:
     classNames = f.read().rstrip('\n').split('\n')
 
 # YOLO model configurations
-modelConfiguration = 'python_scripts/YOLO_config/yolov4-tiny.cfg'
-modelWeights = 'python_scripts/YOLO_config/yolov4-tiny.weights'
+modelConfiguration = 'posture_recognition_python_scripts/YOLO_config/yolov4-tiny.cfg'
+modelWeights = 'posture_recognition_python_scripts/YOLO_config/yolov4-tiny.weights'
 
 net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeights)
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
@@ -54,8 +55,8 @@ poseEstimatorInUse = []
 boxDistDiff = [0.0] * personCount
 
 # load model
-normalZoneModel = torch.load('python_scripts/model_training/models/normal_zone_model.pth')
-dangerZoneModel = torch.load('python_scripts/model_training/models/danger_zone_model.pth')
+normalZoneModel = torch.load('posture_recognition_python_scripts/model_training/models/normal_zone_model.pth')
+dangerZoneModel = torch.load('posture_recognition_python_scripts/model_training/models/danger_zone_model.pth')
 
 # suppress wanning from SSL verification
 requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
@@ -222,8 +223,8 @@ def multiPersonPostureRecognition(outputs, frame):
 
                         # log video output path in database through post request
                         requests.post(
-                            url = "https://localhost:5001/VideoPath", 
-                            json = {'videoPath': "posture_video_recording/%s"%videoOutputName},
+                            url = "https://localhost:5001/PostureVideoPath", 
+                            json = {'postureVideoPath': "posture_video_recording/%s"%videoOutputName},
                             verify = False)
                     
                     # set person's posture state
@@ -275,8 +276,8 @@ def multiPersonPostureRecognition(outputs, frame):
 
                         # log video output path in database through post request
                         requests.post(
-                            url = "https://localhost:5001/VideoPath", 
-                            json = {'videoPath': "posture_video_recording/%s"%videoOutputName},
+                            url = "https://localhost:5001/PostureVideoPath", 
+                            json = {'postureVideoPath': "posture_video_recording/%s"%videoOutputName},
                             verify = False)
                     
                     # set person's posture state
@@ -330,8 +331,8 @@ def multiPersonPostureRecognition(outputs, frame):
 
                         # log video output path in database through post request
                         requests.post(
-                            url = "https://localhost:5001/VideoPath", 
-                            json = {'videoPath': "posture_video_recording/%s"%videoOutputName},
+                            url = "https://localhost:5001/PostureVideoPath", 
+                            json = {'postureVideoPath': "posture_video_recording/%s"%videoOutputName},
                             verify = False)
                     
                     # set person's posture state
@@ -382,8 +383,8 @@ def multiPersonPostureRecognition(outputs, frame):
 
                         # log video output path in database through post request
                         requests.post(
-                            url = "https://localhost:5001/VideoPath", 
-                            json = {'videoPath': "posture_video_recording/%s"%videoOutputName},
+                            url = "https://localhost:5001/PostureVideoPath", 
+                            json = {'postureVideoPath': "posture_video_recording/%s"%videoOutputName},
                             verify = False)
                     
                     # set person's posture state

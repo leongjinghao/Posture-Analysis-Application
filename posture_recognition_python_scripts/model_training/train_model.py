@@ -8,7 +8,11 @@ from torch.nn import BCELoss
 from numpy import vstack
 from sklearn.metrics import accuracy_score
 from torch.nn import Module
-from posture_dataset import PostureDataset
+# work around for directory not found when importing PostureDataset from posture_analyser main
+try:
+    from posture_dataset import PostureDataset
+except:
+    pass
 from torch.nn.init import kaiming_uniform_
 from torch.nn.init import xavier_uniform_
 
@@ -17,8 +21,8 @@ device = torch.device("cuda")
 torch.backends.cudnn.benchmark = True
 
 # file path configuration
-logFilePath = 'python_scripts/model_training/posture_log_file/landmark_data_dangerzone.txt'
-modelFilePath = 'python_scripts/model_training/models/danger_zone_model.pth'
+logFilePath = 'posture_recognition_python_scripts/model_training/posture_log_file/landmark_data_dangerzone.txt'
+modelFilePath = 'posture_recognition_python_scripts/model_training/models/danger_zone_model.pth'
 
 class MLP(Module):
     # constructor to setup the neural network
