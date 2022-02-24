@@ -10,29 +10,32 @@ using System.Reflection;
 
 namespace PostureRecognitionAPI.Repositories
 {
-    public class VideoPathRepository : IVideoPathRepository
+    public class PostureVideoPathRepository : IPostureVideoPathRepository
     {
         private readonly IDataContext _context;
-        public VideoPathRepository(IDataContext context)
+        public PostureVideoPathRepository(IDataContext context)
         {
             _context = context;
 
         }
-        public async Task Add(VideoPath videoPath)
+        public async Task Add(PostureVideoPath postureVideoPath)
         {
-            _context.VideoPaths.Add(videoPath);
+            _context.PostureVideoPaths.Add(postureVideoPath);
             await _context.SaveChangesAsync();
         }
 
         public async Task Delete(string videoName)
         {
-            var itemToDelete = await (_context.VideoPaths.Where(vp => vp.videoPath.Contains(videoName))).FirstAsync();
+            // delete posture video path stored in database table
+            var itemToDelete = await (_context.PostureVideoPaths.Where(vp => vp.postureVideoPath.Contains(videoName))).FirstAsync();
             if (itemToDelete == null)
                 throw new NullReferenceException();
             
-            _context.VideoPaths.Remove(itemToDelete);
+            _context.PostureVideoPaths.Remove(itemToDelete);
             await _context.SaveChangesAsync();
 
+            // delete video recording stored in React public folder
+            // retrieve directory of root dir
             string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string repoPath = Directory.GetParent(
                                 Directory.GetParent(
@@ -44,23 +47,23 @@ namespace PostureRecognitionAPI.Repositories
             File.Delete(@fullVideoPath);
         }
 
-        public async Task<VideoPath> Get(int id)
+        public async Task<PostureVideoPath> Get(int id)
         {
-            return await _context.VideoPaths.FindAsync(id);
+            return await _context.PostureVideoPaths.FindAsync(id);
         }
 
-        public async Task<IEnumerable<VideoPath>> GetAll()
+        public async Task<IEnumerable<PostureVideoPath>> GetAll()
         {
-            return await _context.VideoPaths.ToListAsync();
+            return await _context.PostureVideoPaths.ToListAsync();
         }
 
-        public async Task Update(VideoPath videoPath)
+        public async Task Update(PostureVideoPath postureVideoPath)
         {
-            var itemToUpdate = await _context.VideoPaths.FindAsync(videoPath.id);
+            var itemToUpdate = await _context.PostureVideoPaths.FindAsync(postureVideoPath.id);
             if (itemToUpdate == null)
                 throw new NullReferenceException();
 
-            itemToUpdate.videoPath = videoPath.videoPath;
+            itemToUpdate.postureVideoPath = postureVideoPath.postureVideoPath;
             await _context.SaveChangesAsync();
         }
     }

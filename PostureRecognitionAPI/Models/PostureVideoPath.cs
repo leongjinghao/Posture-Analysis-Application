@@ -1,8 +1,8 @@
 namespace PostureRecognitionAPI.Models
 {
-    public class VideoPath
+    public class PostureVideoPath
     {
         public int id { get; set; }
-        public string videoPath { get; set; }
+        public string postureVideoPath { get; set; }
     }
 }

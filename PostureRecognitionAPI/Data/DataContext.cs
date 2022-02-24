@@ -12,6 +12,6 @@ namespace PostureRecognitionAPI.Data
  
         public DbSet<DangerZoneCoordinates> DangerZoneCoordinates { get; init; }
         public DbSet<PostureLog> PostureLogs { get; init; }
-        public DbSet<VideoPath> VideoPaths { get; init; }
+        public DbSet<PostureVideoPath> PostureVideoPaths { get; init; }
     }
 }
