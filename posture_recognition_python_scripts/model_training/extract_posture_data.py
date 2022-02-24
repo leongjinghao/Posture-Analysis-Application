@@ -3,21 +3,25 @@ import numpy as np
 import mediapipe as mp
 import time
 
-cap = cv2.VideoCapture('../video_sample/badposture_dangerzone.mp4')
-logFilePath = 'python_scripts/model_training/posture_log_file/landmark_data_normalzone.txt'
-# 1 = bad posture data, 0 = good posture data
+# configuration of video source for extraction of posture data
+cap = cv2.VideoCapture('posture_recognition_python_scripts/video_sample/boxing.mp4')
+# configuration for the posture log file name with its directory
+logFilePath = 'posture_recognition_python_scripts/model_training/posture_log_file/landmark_data_normalzone.txt'
+# configuration for the posture class, 1 = bad posture data, 0 = good posture data
 posClass = 0
+# configuration for the config and wights file of YOLO model used
+modelConfiguration = 'posture_recognition_python_scripts/YOLO_config/yolov4-tiny.cfg'
+modelWeights = 'posture_recognition_python_scripts/YOLO_config/yolov4-tiny.weights'
+
+# default configurations
 whT = 320
 confThreshold = 0.5
 nmsThreshold = 0.3
 pTime = 0
 
 classNames = []
-with open('python_scripts/YOLO_config/coco.names', 'rt') as f:
+with open('posture_recognition_python_scripts/YOLO_config/coco.names', 'rt') as f:
     classNames = f.read().rstrip('\n').split('\n')
-
-modelConfiguration = 'python_scripts/YOLO_config/yolov4-tiny.cfg'
-modelWeights = 'python_scripts/YOLO_config/yolov4-tiny.weights'
 
 net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeights)
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
@@ -27,13 +31,14 @@ mpPose = mp.solutions.pose
 pose = mpPose.Pose(min_detection_confidence=0.5)
 mpDraw = mp.solutions.drawing_utils
 
-
-def findObjects(outputs, img):
+# function for detecting the person on frame, extract the posture data and store it in specified log file
+def extractPersonPostureData(outputs, img):
     hT, wT, cT = img.shape
     bbox = []
     classIds = []
     confs = []
 
+    # for each detection found in the output layers
     for output in outputs:
         for det in output:
             scores = det[5:]
@@ -50,12 +55,14 @@ def findObjects(outputs, img):
                 classIds.append(classId)
                 confs.append(float(confidence))
 
+    # suppress duplicated bounding boxes
     indicies = cv2.dnn.NMSBoxes(bbox, confs, confThreshold, nmsThreshold, top_k=1)
 
+    # for each person detected
     for i in indicies:
         box = bbox[i]
         x, y, w, h = box[0], box[1], box[2], box[3]
-        # bounding box
+        # draw the bounding box on frame
         cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 255), 2)
         # label for object and confidence
         cv2.putText(img, f'{classNames[classIds[i]].upper()} {int(confs[i] * 100)}%',
@@ -87,7 +94,7 @@ def findObjects(outputs, img):
                 delimiter = ', '
             else:
                 delimiter = ', {0}\n'.format(posClass)
-            with open(logFilePath, 'a') as f:
+            with open(logFilePath, 'a+') as f:
                 f.write("{0}, {1}{2}".format(lm.x, lm.y, delimiter))
 
 
@@ -99,16 +106,21 @@ while True:
         print('End of video stream...')
         break
 
+    # inputs from frame are stored in a blob, which will be used for the model input
     blob = cv2.dnn.blobFromImage(img, 1 / 255, (whT, whT), [0, 0, 0], 1, crop=False)
+
+    # set the blob as input for model
     net.setInput(blob)
 
+    # YOLO's 3 output layers
     layerNames = net.getLayerNames()
     outputNames = [layerNames[i - 1] for i in net.getUnconnectedOutLayers()]
-    # print(outputNames)
 
+    # retrieve object detection data
     outputs = net.forward(outputNames)
 
-    findObjects(outputs, img)
+    # extract and store person's posture data in specified log file
+    extractPersonPostureData(outputs, img)
 
     # show FPS
     cTime = time.time()

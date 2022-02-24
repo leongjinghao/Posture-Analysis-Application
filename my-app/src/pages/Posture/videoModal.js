@@ -26,7 +26,7 @@ function VideoModal({ url, visible, loading, handleOk, handleCancel }) {
                         key="back"
                         type="primary"
                         onClick={() => {
-                            fetch('https://localhost:5001/VideoPath/' + videoName, { method: 'DELETE' });
+                            fetch('https://localhost:5001/PostureVideoPath/' + videoName, { method: 'DELETE' });
                             handleCancel;
                             // Add reloading of page after delete
                             location.reload();

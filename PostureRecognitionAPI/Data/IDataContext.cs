@@ -9,7 +9,7 @@ namespace PostureRecognitionAPI.Data
     {
         DbSet<DangerZoneCoordinates> DangerZoneCoordinates { get; init; }
         DbSet<PostureLog> PostureLogs { get; init; }
-        DbSet<VideoPath> VideoPaths { get; init; }
+        DbSet<PostureVideoPath> PostureVideoPaths { get; init; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }
