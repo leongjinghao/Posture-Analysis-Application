@@ -8,7 +8,6 @@ import mediapipe as mp
 import time
 import torch
 import requests
-from model_training.posture_dataset import PostureDataset
 from model_training.train_model import predict, MLP
 from shapely.geometry import Polygon
 from urllib3.exceptions import InsecureRequestWarning

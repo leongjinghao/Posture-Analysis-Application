@@ -12,7 +12,7 @@ from torch.nn import Module
 try:
     from posture_dataset import PostureDataset
 except:
-    pass
+    from model_training.posture_dataset import PostureDataset
 from torch.nn.init import kaiming_uniform_
 from torch.nn.init import xavier_uniform_
 
