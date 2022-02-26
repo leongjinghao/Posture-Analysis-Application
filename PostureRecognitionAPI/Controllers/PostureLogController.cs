@@ -22,16 +22,19 @@ namespace PostureRecognitionAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<PostureLog>> GetPostureLog(int id)
         {
+            // Check if there is any records retrieved with the provided id
             var postureLog = await _postureLogRepository.Get(id);
             if (postureLog == null)
                 return NotFound();
 
+            // Return the records retrieved
             return Ok(postureLog);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeletePostureLog(int id)
         {
+            // Call the Delete function declared in repository with a given id as input
             await _postureLogRepository.Delete(id);
             return Ok();
         }
@@ -39,6 +42,7 @@ namespace PostureRecognitionAPI.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdatePostureLog(int id, UpdatePostureLogDto updatePostureLogDto)
         {
+            // Create new postureLog object with the given parameters through the DTO
             var postureLog = new PostureLog
             {
               id = id,
@@ -49,6 +53,7 @@ namespace PostureRecognitionAPI.Controllers
               dateTime = DateTime.Now
             };
 
+            // Update the specified record
             await _postureLogRepository.Update(postureLog);
             return Ok();
         }
@@ -56,13 +61,16 @@ namespace PostureRecognitionAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PostureLog>>> GetPostureLogs()
         {
+            // Call the GetAll function declared in repository
             var postureLogs = await _postureLogRepository.GetAll();
+            // Return the records retrieved
             return Ok(postureLogs);
         }
 
         [HttpPost]
         public async Task<ActionResult> CreatePostureLog(CreatePostureLogDto createPostureLogDto)
         {
+            // Create new postureLog object with the given parameters through the DTO
             var postureLog = new PostureLog
             {
               cameraId = createPostureLogDto.cameraId,
@@ -72,6 +80,7 @@ namespace PostureRecognitionAPI.Controllers
               dateTime = DateTime.Now
             };
 
+            // Add the new record
             await _postureLogRepository.Add(postureLog);
             return Ok();
         }
