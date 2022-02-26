@@ -201,7 +201,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 # if the person was performing good posture previously or buffer length is more than 105 (7sec for 15fps video),
                 # consolidate and save the good posture frames of the person into a video
                 # note: poseObjIdx can be mapped to a person
-                if personPostureState[poseObjIdx] != "bad" or len(framesArray[poseObjIdx]) >= 105:
+                if personPostureState[poseObjIdx] != "bad" or len(framesArray[poseObjIdx]) == 105:
                     
                     # set video name according to context
                     if personPostureState[poseObjIdx] != "bad":
@@ -256,7 +256,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 # if the person was performing bad posture previously or buffer length is more than 105 (7sec for 15fps video),
                 # consolidate and save the bad posture frames of the person into a video
                 # note: poseObjIdx can be mapped to a person
-                if personPostureState[poseObjIdx] != "good" or len(framesArray[poseObjIdx]) >= 105:
+                if personPostureState[poseObjIdx] != "good" or len(framesArray[poseObjIdx]) == 105:
                     
                     # set video name according to context
                     if personPostureState[poseObjIdx] != "good":
@@ -313,7 +313,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 # if the person was performing good posture previously or buffer length is more than 105 (7sec for 15fps video), 
                 # consolidate and save the good posture frames of the person into a video
                 # note: poseObjIdx can be mapped to a person
-                if personPostureState[poseObjIdx] != "bad" or len(framesArray[poseObjIdx]) >= 105:
+                if personPostureState[poseObjIdx] != "bad" or len(framesArray[poseObjIdx]) == 105:
                     
                     # set video name according to context
                     if personPostureState[poseObjIdx] != "bad":
@@ -367,7 +367,7 @@ def multiPersonPostureRecognition(outputs, frame):
                 # if the person was performing bad posture previously or buffer length is more than 105 (7sec for 15fps video), 
                 # consolidate and save the bad posture frames of the person into a video
                 # note: poseObjIdx can be mapped to a person
-                if personPostureState[poseObjIdx] != "good" or len(framesArray[poseObjIdx]) >= 105:
+                if personPostureState[poseObjIdx] != "good" or len(framesArray[poseObjIdx]) == 105:
                     
                     # set video name according to context
                     if personPostureState[poseObjIdx] != "good":
