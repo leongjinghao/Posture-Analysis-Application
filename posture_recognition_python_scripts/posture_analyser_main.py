@@ -205,8 +205,10 @@ def multiPersonPostureRecognition(outputs, frame):
                     
                     # set video name according to context
                     if personPostureState[poseObjIdx] != "bad":
+                        # past buffered frames are good posture frames
                         videoOutputName = 'good_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
                     else:
+                        # past buffered frames are bad posture frames (buffered length == 105)
                         videoOutputName = 'bad_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
 
                     # drop unstable frames of detection with total buffer frame <= 5
@@ -258,8 +260,10 @@ def multiPersonPostureRecognition(outputs, frame):
                     
                     # set video name according to context
                     if personPostureState[poseObjIdx] != "good":
+                        # past buffered frames are bad posture frames (buffered length == 105)
                         videoOutputName = 'bad_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
                     else:
+                        # past buffered frames are good posture frames
                         videoOutputName = 'good_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
 
                     # drop unstable frames of detection with total buffer frame <= 5
@@ -313,8 +317,10 @@ def multiPersonPostureRecognition(outputs, frame):
                     
                     # set video name according to context
                     if personPostureState[poseObjIdx] != "bad":
+                        # past buffered frames are good posture frames
                         videoOutputName = 'good_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
                     else:
+                        # past buffered frames are bad posture frames (buffered length == 105)
                         videoOutputName = 'bad_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
 
                     # drop unstable frames of detection with total buffer frame <= 5
@@ -365,8 +371,10 @@ def multiPersonPostureRecognition(outputs, frame):
                     
                     # set video name according to context
                     if personPostureState[poseObjIdx] != "good":
+                        # past buffered frames are bad posture frames (buffered length == 105)
                         videoOutputName = 'bad_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
                     else:
+                        # past buffered frames are good posture frames
                         videoOutputName = 'good_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
 
                     # drop unstable frames of detection with total buffer frame <= 5
