@@ -34,7 +34,7 @@ namespace PostureRecognitionAPI.Repositories
                 // extract first (earliest) video name from path retrieved as the input for Delete() function 
                 var videoName = allVideoRecordings[0].Replace("posture_video_recording/", "");
                 // delete the earliest video recording stored
-                Task task = Delete(videoName);
+                await Delete(videoName);
             }
 
             // add the new video recording's path
