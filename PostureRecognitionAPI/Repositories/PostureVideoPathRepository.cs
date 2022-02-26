@@ -18,9 +18,11 @@ namespace PostureRecognitionAPI.Repositories
             _context = context;
 
         }
+
+        // Add new record in PostureVideoPaths table using a postureVideoPath object
         public async Task Add(PostureVideoPath postureVideoPath)
         {
-            /* line 25 to 36: set upper limit for video recording stored to 20
+            /* line 27 to 38: set upper limit for video recording stored to 20
                Delete this section when upper limit not required */
             // retrieve existing number of video recordings stored
             var allVideoRecordings = await _context.PostureVideoPaths.Select(pvp => pvp.postureVideoPath).ToListAsync();
@@ -40,17 +42,18 @@ namespace PostureRecognitionAPI.Repositories
             await _context.SaveChangesAsync();
         }
 
+        // Delete the specified record in PostureVideoPaths table with a given video name
         public async Task Delete(string videoName)
         {
-            // delete posture video path stored in database table
+            // Check if the provided video name exist
             var itemToDelete = await (_context.PostureVideoPaths.Where(vp => vp.postureVideoPath.Contains(videoName))).FirstAsync();
             if (itemToDelete == null)
                 throw new NullReferenceException();
             
+            // Delete record from table
             _context.PostureVideoPaths.Remove(itemToDelete);
             await _context.SaveChangesAsync();
 
-            // delete video recording stored in React public folder
             // retrieve directory of root dir
             string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string repoPath = Directory.GetParent(
@@ -60,25 +63,31 @@ namespace PostureRecognitionAPI.Repositories
             string reactPublicPath = repoPath + "\\my-app\\public\\posture_video_recording";
             string fullVideoPath = reactPublicPath + "\\" + videoName;
 
+            // delete video recording stored in React public folder
             File.Delete(@fullVideoPath);
         }
 
+        // Get the postureVideoPath attributes with a given id
         public async Task<PostureVideoPath> Get(int id)
         {
             return await _context.PostureVideoPaths.FindAsync(id);
         }
 
+        // Get all the postureVideoPath attributes
         public async Task<IEnumerable<PostureVideoPath>> GetAll()
         {
             return await _context.PostureVideoPaths.ToListAsync();
         }
 
+        // Update the specified record in PostureVideoPaths table with a given postureVideoPath object
         public async Task Update(PostureVideoPath postureVideoPath)
         {
+            // Check if the id of provided postureVideoPath object exist
             var itemToUpdate = await _context.PostureVideoPaths.FindAsync(postureVideoPath.id);
             if (itemToUpdate == null)
                 throw new NullReferenceException();
 
+            // Update record of the id tied with the given postureVideoPath object
             itemToUpdate.postureVideoPath = postureVideoPath.postureVideoPath;
             await _context.SaveChangesAsync();
         }
