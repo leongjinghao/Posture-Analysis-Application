@@ -20,6 +20,22 @@ namespace PostureRecognitionAPI.Repositories
         }
         public async Task Add(PostureVideoPath postureVideoPath)
         {
+            /* line 25 to 36: set upper limit for video recording stored to 20
+               Delete this section when upper limit not required */
+            // retrieve existing number of video recordings stored
+            var allVideoRecordings = await _context.PostureVideoPaths.Select(pvp => pvp.postureVideoPath).ToListAsync();
+            var videoCount = allVideoRecordings.Count();
+            
+            // if there are already 20 video recordings stored, 
+            // delete earliest video recording stored before adding
+            if (videoCount == 20) {
+                // extract first (earliest) video name from path retrieved as the input for Delete() function 
+                var videoName = allVideoRecordings[0].Replace("posture_video_recording/", "");
+                // delete the earliest video recording stored
+                Task task = Delete(videoName);
+            }
+
+            // add the new video recording's path
             _context.PostureVideoPaths.Add(postureVideoPath);
             await _context.SaveChangesAsync();
         }

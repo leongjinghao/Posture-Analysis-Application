@@ -33,8 +33,6 @@ namespace PostureRecognitionAPI.Controllers
         {
             await _postureVideoPathRepository.Delete(videoName);
 
-            //TODO: delete physical video recordings located in react public folder
-
             return Ok();
         }
 
