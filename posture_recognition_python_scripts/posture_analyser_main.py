@@ -12,15 +12,16 @@ from model_training.train_model import predict, MLP
 from shapely.geometry import Polygon
 from urllib3.exceptions import InsecureRequestWarning
 from flask import Flask, render_template, Response
+from email_notificatifier import EmailNotifier
 
 # Used for establishing flask endpoint
 app = Flask(__name__)
 
 # CLI argument(s)
-args = sys.argv[1:]
+args = [0,2,5003]
 
 # video stream source
-cap = cv2.VideoCapture(args[0])
+cap = cv2.VideoCapture(int(args[0]))
 
 # confidence threshold for person detection
 confThreshold = 0.5
@@ -73,10 +74,17 @@ for row in data:
 # create a polygon for each danger zone
 dangerZonePolygon = [Polygon(dangerZone[i]) for i in range(len(dangerZone))]
 # threshold of intersection ratio
-intersectionThreshold = 0.8
+intersectionThreshold = 0.1
 
+# list to store the posture state (good or bad) of each person
 personPostureState = [None] * personCount
+# list of frames buffer for each person
 framesArray = [[]] * personCount
+
+# minimum threshold of buffered bad posture frames to notify supervisor, based on 15 fps
+bufferFrameThreshold = 75
+# flag to track to if notification is required, false by default
+toNotifyFlag = False
 
 def multiPersonPostureRecognition(outputs, frame):
     # STEP 1: Detect each person on frame (frame) #
@@ -183,6 +191,10 @@ def multiPersonPostureRecognition(outputs, frame):
 
         # if person detected is in one of the danger zone
         if intersectFlag is True:
+
+            # retrieve toNotifyFlag from global scope
+            global toNotifyFlag
+
             # if bad posture detected
             if predict(postureLm, dangerZoneModel).round() == float(1):
                 
@@ -201,13 +213,25 @@ def multiPersonPostureRecognition(outputs, frame):
                 # if the person was performing good posture previously or buffer length is more than 105 (7sec for 15fps video),
                 # consolidate and save the good posture frames of the person into a video
                 # note: poseObjIdx can be mapped to a person
-                if personPostureState[poseObjIdx] != "bad" or len(framesArray[poseObjIdx]) >= 105:
+                if personPostureState[poseObjIdx] != "bad" or len(framesArray[poseObjIdx]) == 105:
                     
                     # set video name according to context
                     if personPostureState[poseObjIdx] != "bad":
+                        # past buffered frames are good posture frames
                         videoOutputName = 'good_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
+                        
+                        # set flag to track to if notification is required, 
+                        # i.e. next block of buffered frame is bad posture, would require notifying supervisor
+                        # as posture transit from good posture to bad posture, with 105 buffered bad posture frames (7 seconds)
+                        toNotifyFlag = True
+
                     else:
+                        # past buffered frames are bad posture frames (buffered length == 105)
                         videoOutputName = 'bad_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
+                        
+                        # unset flag to track if notification is required,
+                        # as past buffered frames are already blocks of bad posture frames
+                        toNotifyFlag = False
 
                     # drop unstable frames of detection with total buffer frame <= 5
                     if len(framesArray[poseObjIdx]) > 5:
@@ -236,6 +260,21 @@ def multiPersonPostureRecognition(outputs, frame):
                 # append bad posture frame to the framesArray
                 else:
                     framesArray[poseObjIdx].append(frame)
+                
+                # Check only once if the notify flag is set to true and buffered length is == bufferFrameThreshold
+                if toNotifyFlag == True and len(framesArray[poseObjIdx]) == bufferFrameThreshold:
+                    
+                    # send email notification
+                    message = """\
+                    Subject: Bad Posture Detection
+
+                    This message is sent from Python."""
+
+                    emailNotifier = EmailNotifier(["leongjinghao@gmail.com"])
+                    emailNotifier.setMessage(message)
+                    # emailNotifier.sendEmail()
+
+                    print("NOTIFIED HERE!!!")
                         
             # else, it is a good posture
             else:
@@ -254,12 +293,14 @@ def multiPersonPostureRecognition(outputs, frame):
                 # if the person was performing bad posture previously or buffer length is more than 105 (7sec for 15fps video),
                 # consolidate and save the bad posture frames of the person into a video
                 # note: poseObjIdx can be mapped to a person
-                if personPostureState[poseObjIdx] != "good" or len(framesArray[poseObjIdx]) >= 105:
+                if personPostureState[poseObjIdx] != "good" or len(framesArray[poseObjIdx]) == 105:
                     
                     # set video name according to context
                     if personPostureState[poseObjIdx] != "good":
+                        # past buffered frames are bad posture frames (buffered length == 105)
                         videoOutputName = 'bad_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
                     else:
+                        # past buffered frames are good posture frames
                         videoOutputName = 'good_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
 
                     # drop unstable frames of detection with total buffer frame <= 5
@@ -309,14 +350,26 @@ def multiPersonPostureRecognition(outputs, frame):
                 # if the person was performing good posture previously or buffer length is more than 105 (7sec for 15fps video), 
                 # consolidate and save the good posture frames of the person into a video
                 # note: poseObjIdx can be mapped to a person
-                if personPostureState[poseObjIdx] != "bad" or len(framesArray[poseObjIdx]) >= 105:
+                if personPostureState[poseObjIdx] != "bad" or len(framesArray[poseObjIdx]) == 105:
                     
                     # set video name according to context
                     if personPostureState[poseObjIdx] != "bad":
+                        # past buffered frames are good posture frames
                         videoOutputName = 'good_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
-                    else:
-                        videoOutputName = 'bad_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
+                        
+                        # set flag to track to if notification is required, 
+                        # i.e. next block of buffered frame is bad posture, would require notifying supervisor
+                        # as posture transit from good posture to bad posture, with 105 buffered bad posture frames (7 seconds)
+                        toNotifyFlag = True
 
+                    else:
+                        # past buffered frames are bad posture frames (buffered length == 105)
+                        videoOutputName = 'bad_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
+                        
+                        # unset flag to track if notification is required,
+                        # as past buffered frames are already blocks of bad posture frames
+                        toNotifyFlag = False
+                        
                     # drop unstable frames of detection with total buffer frame <= 5
                     if len(framesArray[poseObjIdx]) > 5:
                         
@@ -343,6 +396,21 @@ def multiPersonPostureRecognition(outputs, frame):
                 # append bad posture frame to the framesArray
                 else:
                     framesArray[poseObjIdx].append(frame)
+                
+                # Check only once if the notify flag is set to true and buffered length is == bufferFrameThreshold
+                if toNotifyFlag == True and len(framesArray[poseObjIdx]) == bufferFrameThreshold:
+                    
+                    # send email notification
+                    message = """\
+                    Subject: Bad Posture Detection
+
+                    This message is sent from Python."""
+
+                    emailNotifier = EmailNotifier(["leongjinghao@gmail.com"])
+                    emailNotifier.setMessage(message)
+                    # emailNotifier.sendEmail()
+
+                    print("NOTIFIED HERE!!!")
             
             # else, it is a good posture
             else:
@@ -361,12 +429,14 @@ def multiPersonPostureRecognition(outputs, frame):
                 # if the person was performing bad posture previously or buffer length is more than 105 (7sec for 15fps video), 
                 # consolidate and save the bad posture frames of the person into a video
                 # note: poseObjIdx can be mapped to a person
-                if personPostureState[poseObjIdx] != "good" or len(framesArray[poseObjIdx]) >= 105:
+                if personPostureState[poseObjIdx] != "good" or len(framesArray[poseObjIdx]) == 105:
                     
                     # set video name according to context
                     if personPostureState[poseObjIdx] != "good":
+                        # past buffered frames are bad posture frames (buffered length == 105)
                         videoOutputName = 'bad_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
                     else:
+                        # past buffered frames are good posture frames
                         videoOutputName = 'good_posture_%s.mp4'%datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
 
                     # drop unstable frames of detection with total buffer frame <= 5
