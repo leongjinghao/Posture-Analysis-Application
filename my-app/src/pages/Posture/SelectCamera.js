@@ -3,9 +3,9 @@ import React, { Component, useState, props } from "react";
 
 const { Option } = Select;
 
-function handleChange(value) {
-    console.log(`selected ${value}`);
-}
+// function handleChange(value) {
+//     console.log(`selected ${value}`);
+// }
 
 class SelectCamera extends React.Component {
     /**
@@ -15,6 +15,10 @@ class SelectCamera extends React.Component {
         url: '',
         camera: '',
     };
+
+    handleChange(value) {
+        console.log(`selected ${value}`);
+    }
 
     render() {
         return (
