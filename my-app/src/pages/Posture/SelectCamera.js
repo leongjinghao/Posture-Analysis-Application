@@ -14,28 +14,30 @@ const cameraLink = { "Camera 1": "http://localhost:5003/video", "Camera 2": "htt
 
 class SelectCamera extends React.Component {
     /**
-     * video url and which camera type?
+     * default url and camera
      */
     state = {
-        url: '',
-        camera: '',
+        url: 'http://localhost:5003/video',
+        camera: 'All Cameras',
     };
 
     /**
      * Haven't really tested it out!
      */
     handleChange(value) {
-        // console.log(`selected ${value}`);
-        camera = cameraLink[value];
+        console.log(`selected ${value}`);
+        this.state.camera = value;
+        this.state.url = cameraLink['Camera 1'];
     }
 
     render() {
+        const { url, camera } = this.state;
         return (
             <>
                 <div class="camera1">
                     <div class='text-dropdown'>
                         <div class='text'>
-                            <p class='Title'>Camera 1</p>
+                            <p class='Title'>{camera}</p>
                         </div>
                         <div class='dropdown1'>
                             <Select defaultValue="All Cameras" style={{ width: 120 }} onChange={this.handleChange}>
@@ -46,7 +48,7 @@ class SelectCamera extends React.Component {
                         </div>
                     </div>
                     <div>
-                        <img src={this.state.url} />
+                        <img src={url} />
                     </div>
                 </div>
             </>
