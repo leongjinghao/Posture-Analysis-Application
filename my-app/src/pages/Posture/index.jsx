@@ -32,7 +32,7 @@ class App extends Component {
         return (
             <ProCard tabs={{ type: 'card' }}>
                 <ProCard.TabPane key=" tab1" tab="Live Feed">
-                    <selectCamera />
+                    <SelectCamera />
                 {/* {this.state.showCamera2 || 
                 <div class="camera1">
                     <div class='text-dropdown'>
