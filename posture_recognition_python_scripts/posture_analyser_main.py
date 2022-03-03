@@ -18,10 +18,10 @@ from email_notificatifier import EmailNotifier
 app = Flask(__name__)
 
 # CLI argument(s)
-args = [0,2,5003]
+args = sys.argv[1:]
 
 # video stream source
-cap = cv2.VideoCapture(int(args[0]))
+cap = cv2.VideoCapture(args[0])
 
 # confidence threshold for person detection
 confThreshold = 0.5
@@ -74,7 +74,7 @@ for row in data:
 # create a polygon for each danger zone
 dangerZonePolygon = [Polygon(dangerZone[i]) for i in range(len(dangerZone))]
 # threshold of intersection ratio
-intersectionThreshold = 0.1
+intersectionThreshold = 0.8
 
 # list to store the posture state (good or bad) of each person
 personPostureState = [None] * personCount
