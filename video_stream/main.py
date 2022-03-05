@@ -2,7 +2,7 @@ from flask import Flask, render_template, Response
 import cv2
 
 app = Flask(__name__)
-camera = cv2.VideoCapture(0)
+camera = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
 
 def generate_frames():
@@ -30,4 +30,4 @@ def video():
 
 
 if __name__ == "__main__":
-    app.run(port=5002, debug=True)
+    app.run(host='0.0.0.0', port=5002, threaded=True)
