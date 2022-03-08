@@ -78,32 +78,12 @@ export default defineConfig({
     {
       name: 'AI Camera - Posture',
       icon: 'table',
-      path: '/Posture',
-      component: './Posture',
+      path: '/Posture_AI',
+      component: './Posture_AI',
     },
     {
-      path: '/Posture',
-      redirect: '/Posture',
-    },
-
-    {
-      name: 'Livefeed',
-      icon: 'table',
-      path: '/Livefeed',
-      component: './Livefeed',
-    },
-    {
-      path: '/Livefeed',
-      redirect: '/Livefeed',
-    },
-
-    {
-      path: '/Livefeed/camera2',
-      component: './Livefeed/camera2',
-    },
-    {
-      path: '/Livefeed/camera2',
-      redirect: '/Livefeed/camera2',
+      path: '/Posture_AI',
+      redirect: '/Posture_AI',
     },
 
     {
