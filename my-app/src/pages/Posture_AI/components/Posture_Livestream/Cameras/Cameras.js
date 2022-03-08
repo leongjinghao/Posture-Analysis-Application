@@ -8,7 +8,7 @@ class AllCameras extends Component {
         return (
             <div>
                 <img
-                    src="http://localhost:5003/video/"
+                    src="http://localhost:5003/video"
                     alt="Video1"
                     width="500"
                     height="400"
@@ -45,7 +45,7 @@ class FirstCamera extends Component {
         return (
             <div>
                 <img
-                    src="http://localhost:5003/video/"
+                    src="http://localhost:5003/video"
                     alt="Video1"
                     width="500"
                     height="400"
@@ -60,7 +60,7 @@ class SecondCamera extends Component {
         return (
             <div>
                 <img
-                    src="http://localhost:5003/video/"
+                    src="http://localhost:5003/video"
                     alt="Video2"
                     width="500"
                     height="400"
