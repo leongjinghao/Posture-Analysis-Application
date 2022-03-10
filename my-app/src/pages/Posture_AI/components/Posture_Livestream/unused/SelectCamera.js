@@ -32,7 +32,8 @@ class SelectCamera extends React.Component {
         const { camera, url } = this.state;
         return (
             <>
-                <div class='text-dropdown'>
+                <div class='container'>
+                    <h1 id="livestream_title"> <u>{this.state.title}</u> </h1>
                     <div class='text'>
                         <p class='Title'>{camera}</p>
                     </div>

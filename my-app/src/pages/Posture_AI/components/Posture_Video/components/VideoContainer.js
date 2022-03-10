@@ -1,8 +1,11 @@
 import React, { Component } from "react";
-import VideoModal from './videoModal';
+import './styles.css';
+import VideoModal from './VideoModal';
 import { Row, Col } from "antd";
 
-class Video extends React.Component {
+const baseURL = 'https://localhost:5001/PostureVideoPath';
+
+class VideoContainer extends React.Component {
 
     state = {
         loading: false,
@@ -13,7 +16,7 @@ class Video extends React.Component {
     };
 
     componentDidMount() {
-        fetch("https://localhost:5001/PostureVideoPath")
+        fetch(baseURL)
             .then(response => {
                 if (!response.ok) {
                     throw Error("Error fetching the posture videos")
@@ -49,6 +52,7 @@ class Video extends React.Component {
         this.setState({ visible: false });
     };
 
+
     render() {
         const { visible, loading, videos } = this.state;
         const displayVideos = () => {
@@ -58,7 +62,7 @@ class Video extends React.Component {
                         <video className='video-size' preload='metadata' onClick={this.showModal(video.postureVideoPath, video.postureVideoPath)} >
                             <source src={video.postureVideoPath} type='video/mp4' />
                         </video>
-                        <p className="video-text">{video.postureVideoPath.replace('posture_video_recording/','')}
+                        <p className="video-text">{video.postureVideoPath.replace('posture_video_recording/', '')}
                         </p>
                     </div>
                 </Col>
@@ -75,4 +79,4 @@ class Video extends React.Component {
     }
 }
 
-export default Video
+export default VideoContainer;
