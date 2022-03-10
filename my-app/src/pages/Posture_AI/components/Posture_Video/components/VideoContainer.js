@@ -59,7 +59,9 @@ class VideoContainer extends React.Component {
             return videos.map(video => (
                 <Col xs={12} xl={6} >
                     <div className="video-container">
-                        <video className='video-size' preload='metadata' onClick={this.showModal(video.postureVideoPath, video.postureVideoPath)} >
+                        <video className='video-size'
+                            preload='metadata'
+                            onClick={this.showModal(video.postureVideoPath, video.postureVideoPath)} >
                             <source src={video.postureVideoPath} type='video/mp4' />
                         </video>
                         <p className="video-text">{video.postureVideoPath.replace('posture_video_recording/', '')}
@@ -73,7 +75,12 @@ class VideoContainer extends React.Component {
         return (
             <Row>
                 {displayVideos()}
-                <VideoModal title={this.state.vidTitle} url={this.state.videoUrl} visible={visible} loading={loading} handleOk={this.handleOk} handleCancel={this.handleCancel} />
+                <VideoModal title={this.state.vidTitle}
+                    url={this.state.videoUrl}
+                    visible={visible}
+                    loading={loading}
+                    handleOk={this.handleOk}
+                    handleCancel={this.handleCancel} />
             </Row>
         )
     }
