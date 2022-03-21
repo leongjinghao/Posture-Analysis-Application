@@ -12,7 +12,7 @@ from model_training.train_model import predict, MLP
 from shapely.geometry import Polygon
 from urllib3.exceptions import InsecureRequestWarning
 from flask import Flask, render_template, Response
-from email_notificatifier import EmailNotifier
+from email_notification import EmailNotifier
 
 # Used for establishing flask endpoint
 app = Flask(__name__)
