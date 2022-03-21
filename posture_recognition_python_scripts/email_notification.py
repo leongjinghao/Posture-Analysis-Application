@@ -10,6 +10,8 @@ class EmailNotifier:
     sender_email = ""
     # sender password (to specify)
     password = ""
+    # list of recipients(s)
+    recipients = []
     # message content
     message = """\
     Subject: Bad Posture Detected
