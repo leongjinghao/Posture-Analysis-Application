@@ -23,8 +23,7 @@ jobs:
         uses: borales/actions-yarn@v2.3.0
         with:
           cmd: --cwd my-app build # will run `yarn build` command
-#       Ant Design Pro test config issue
-#       - name: Yarn test
-#         uses: borales/actions-yarn@v2.3.0
-#         with:
-#           cmd: --cwd my-app test # will run `yarn test` command
+      - name: Yarn test
+        uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: --cwd my-app test # will run `yarn test` command
