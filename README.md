@@ -17,11 +17,15 @@ There are two phases in our posture detection feature. The program will first de
   <img width="640" height="360" src="https://github.com/leongjinghao/Posture-Analysis-Application/blob/main/wiki_media/Person_Detection.gif">
 </p>
 
+YOLO is the open-source library used for person detection. After experimenting with many variants of the models available, the YOLOv4-Tiny model was selected. The rationale behind using this model is mainly because it has the fastest processing speed (by approximately 2-3 times), as compared to all the other variants available. In addition, it has a high detection rate which is on par with the non-Tiny variants. The downside of this model is that the bounding boxes detected are less consistent, as they can expand and contract by a small distance. Other non-Tiny variants have a more consistent bounding box size. Though this is not the main concern in this project as long as it has a high detection rate.
+
 #### Detect Posture of Person
 
 <p align="center">
   <img width="640" height="360" src="https://github.com/leongjinghao/Posture-Analysis-Application/blob/main/wiki_media/Posture_Detection.gif">
 </p>
+
+MediaPipe is the open-source library used for posture detection. For the posture detection process, multiple MediaPipe pose estimator objects will be initialised first. The cropped bounding boxes of persons retrieved from the person detection process will be used as the input for the mediaPipe pose estimator objects. It then outputs a list of landmarks (33 landmarks in total) of the input person's cropped bounding box, each with the x, y, and z coordinates. In this project, we will only be using the x and y coordinates for each of the landmarks.
 
 ### Person Detection in Danger Zone
 
@@ -54,6 +58,8 @@ To integrate the feature for detecting person within danger zone, the process fo
 <p align="center">
   <img width="600" height="340" src="https://github.com/leongjinghao/Posture-Analysis-Application/blob/main/wiki_media/Posture_Recognition_Danger_Zone.gif">
 </p>
+
+In this video demonstration, it illustrates the usage of the different models for detecting bad posture depending if the person is detected to be within or outside of the danger zone. Observe that when the person detected is outside of the danger zone, the person's bounding box is either green (represent good posture) or red (represent bad posture). The red bounding box appears when the person is bending forward, which implies the usage of the normal model for recognising bad posture. In contrast, when the person detected is within the danger zone, the person's bounding box is either turquoise (represent good posture) or purple (represent bad posture). The purple bounding box appears when the person is sitting down and bending forward, which implies the usage of the danger zone model for recognising bad posture. The bending forward motion should not be detected as a bad posture for the danger zone model, we will discuss more on this observation in the following section.
 
 ### React Web Application
 
