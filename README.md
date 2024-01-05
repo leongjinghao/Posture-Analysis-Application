@@ -55,6 +55,16 @@ To integrate the feature for detecting person within danger zone, the process fo
   <img width="600" height="340" src="https://github.com/leongjinghao/Posture-Analysis-Application/blob/main/wiki_media/Posture_Recognition_Danger_Zone.gif">
 </p>
 
+### 1.5.3. React Web Application
+
+<div align="center">
+
+![image](https://user-images.githubusercontent.com/73938217/160342693-63e879a0-a2be-4e10-bc5e-09c2953130b2.png)
+
+</div>
+
+The above image shows the Posture AI module integrated into the single web application hosted on the cloud server. The Posture AI module consists of the LiveStream and Posture Videos page, with the LiveStream page displaying the Posture AI analytic output on the multiple camera feeds, and the Posture Videos page displaying the stored posture video recordings.
+
 Further documentations and demonstrations can be found in the wiki sections:
 - Person & posture detection, model training framework: https://github.com/leongjinghao/Posture-Analysis-Application/wiki/2.-Customer-Day-1#232-features-developed
 - Detection of person in danger zone/ vice versa: https://github.com/leongjinghao/Posture-Analysis-Application/wiki/3.-Customer-Day-2#232-features-developed
