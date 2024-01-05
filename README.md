@@ -43,6 +43,8 @@ The administrator will first need to define the coordinates of the danger zone o
   <img width="600" height="340" src="https://github.com/leongjinghao/Posture-Analysis-Application/blob/main/wiki_media/Person_Detection_Danger_Zone.gif">
 </p>
 
+In this video demonstration, the threshold ratio is configured as 0.8. Hence, the person will only be considered to be within the danger zone if his or her intersection ratio is more than 80%. From the video, it can be observed that when more than 80% of the person body is within a danger zone, the person's bounding box is in turquoise (for good posture). Else, the person is considered to be outside of the danger zone and the person's bounding box is in green (represent good posture). The change in colour for the person's bounding box is to signify the different conditions in which the person is in.
+
 ### Bad Posture Recognition in Danger Zone
 
 #### Processes
