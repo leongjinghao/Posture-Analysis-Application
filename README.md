@@ -55,7 +55,7 @@ To integrate the feature for detecting person within danger zone, the process fo
   <img width="600" height="340" src="https://github.com/leongjinghao/Posture-Analysis-Application/blob/main/wiki_media/Posture_Recognition_Danger_Zone.gif">
 </p>
 
-### 1.5.3. React Web Application
+### React Web Application
 
 <div align="center">
 
